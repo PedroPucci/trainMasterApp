@@ -1,4 +1,4 @@
-# TrainMaster
+# TrainMaster - Mobile/ReactNative
 
 # **Descrição do projeto**
 - O TrainMaster é uma plataforma web e mobile inovadora, destinada a gerenciar e otimizar o treinamento de funcionários em empresas.
