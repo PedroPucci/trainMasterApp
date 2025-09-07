@@ -17,8 +17,7 @@
 ## **IDE's Utilizadas**
 - Visual Studio Code
 - Visual Studio Community
-- Postgrees
----
+- Postgres
 ---
 ## **Recursos do Projeto**
 - **Bibliotecas**: bibliotecas que o projeto precisou, exemplo: icons, calendar.
@@ -37,7 +36,6 @@
 
 **Observações:**
 - Para testar com a API, é necessário subir a API.
-- Testar sem API é possível.
 
 ### **Estrutura do Projeto**
 Essa estrutura garante organização das pastas.
