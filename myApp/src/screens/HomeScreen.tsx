@@ -1,22 +1,33 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import AppHeader from "../components/header/AppHeader";
+import { styles as s } from "./styles";
+
+const reminders = [
+  {
+    title: "Progresso geral: 65% das atividades feitas",
+    subtitle: "Curso: Fundamentos de Banco de Dados",
+  },
+  {
+    title: "Progresso geral: 65% do curso",
+    subtitle: "Curso: Fundamentos de React",
+  },
+];
 
 export default function HomeScreen() {
   return (
     <View style={s.container}>
-      <AppHeader
-        userName="Lydia"
-        onLogout={() => console.log("Sair")}
-      />
+      <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
+
       <ScrollView contentContainerStyle={s.body}>
-        <Text>Lembretes:</Text>
-        {/* ...seu conteúdo */}
+        <Text style={s.sectionTitle}>Lembretes:</Text>
+
+        {reminders.map((r, i) => (
+          <View key={i} style={s.card}>
+            <Text style={s.cardTitle}>{r.title}</Text>
+            <Text style={s.cardSubtitle}>{r.subtitle}</Text>
+          </View>
+        ))}
       </ScrollView>
     </View>
   );
 }
-
-const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F0F4F3" },
-  body: { padding: 16, paddingTop: 12 },
-});
