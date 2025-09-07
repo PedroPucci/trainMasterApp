@@ -31,8 +31,12 @@
 
 ### **2. Testar na versão Mobile**
 1. Faça o clone do projeto.
-2. Abra o terminar e digite expo start.   
-3. Com o aplicativo do Expo instalado no celular, abra e leia o QR Code gerado.
+**Comandos para auxiliar**
+- npx expo install expo
+- npx expo install react react-native
+- npm install expo
+3. Abra o terminar e digite expo start.   
+4. Com o aplicativo do Expo instalado no celular, abra e leia o QR Code gerado.
 
 **Observações:**
 - Para testar com a API, é necessário subir a API.
