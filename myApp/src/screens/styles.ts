@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F0F4F3" },
+
   body: { padding: 16, paddingTop: 12 },
 
   sectionTitle: {
@@ -30,10 +31,84 @@ export const styles = StyleSheet.create({
     fontWeight: "800",
     marginBottom: 6,
   },
+
   cardSubtitle: {
     color: "#0F1E25",
     fontSize: 15,
     fontWeight: "700",
     opacity: 0.9,
+  },
+
+  /* ======== BADGES (grid com no máximo 5 por linha) ======== */
+  badgesGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginHorizontal: -6,
+  },
+
+  badgeCell: {
+    width: "20%",
+    paddingHorizontal: 6,
+    marginBottom: 20,
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+
+  badgePressable: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  badgeMedal: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: "#FFFFFF",
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+
+  /* ======== TOOLTIP ======== */
+  tooltip: {
+    position: "absolute",
+    bottom: 64,
+    maxWidth: 140,
+    backgroundColor: "#111",
+    paddingVertical: 6,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 6,
+    alignItems: "center",
+    zIndex: 2,
+  },
+
+  tooltipText: {
+    color: "#fff",
+    fontSize: 12,
+    textAlign: "center",
+  },
+
+  tooltipCaret: {
+    position: "absolute",
+    bottom: -6,
+    left: "50%",
+    marginLeft: -6,
+    width: 0,
+    height: 0,
+    borderLeftWidth: 6,
+    borderRightWidth: 6,
+    borderTopWidth: 6,
+    borderLeftColor: "transparent",
+    borderRightColor: "transparent",
+    borderTopColor: "#111",
   },
 });

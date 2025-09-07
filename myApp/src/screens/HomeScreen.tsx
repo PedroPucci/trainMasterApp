@@ -1,17 +1,56 @@
-import { View, Text, ScrollView } from "react-native";
+import * as React from "react";
+import { View, Text, ScrollView, Pressable } from "react-native";
 import AppHeader from "../components/header/AppHeader";
 import { styles as s } from "./styles";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const reminders = [
-  {
-    title: "Progresso geral: 65% das atividades feitas",
-    subtitle: "Curso: Fundamentos de Banco de Dados",
-  },
-  {
-    title: "Progresso geral: 65% do curso",
-    subtitle: "Curso: Fundamentos de React",
-  },
+  { title: "Progresso geral: 65% das atividades feitas", subtitle: "Curso: Fundamentos de Banco de Dados" },
+  { title: "Progresso geral: 65% do curso", subtitle: "Curso: Fundamentos de React" },
 ];
+
+type BadgeItem = {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;     // usado no tooltip
+  color: string;
+};
+
+const badges: BadgeItem[] = [
+  { icon: "ribbon",                title: "Concluiu 10 cursos",        color: "#D9A520" },
+  { icon: "flame",                 title: "Sequência de 14 dias",      color: "#FF6B3D" },
+  { icon: "trophy",                title: "Top 3% da turma",           color: "#FFB020" },
+  { icon: "checkmark-done-circle", title: "120 atividades feitas",     color: "#34C759" },
+  { icon: "school",                title: "3 certificações",           color: "#4F7CAC" },
+];
+
+function BadgeCell({ icon, title, color }: BadgeItem) {
+  const [visible, setVisible] = React.useState(false);
+
+  return (
+    <View style={s.badgeCell}>
+      <Pressable
+        onPressIn={() => setVisible(true)}
+        onPressOut={() => setVisible(false)}
+        onLongPress={() => setVisible(true)}
+        delayLongPress={150}
+        accessibilityLabel={title}
+        accessibilityHint="Toque e segure para ver a dica"
+        style={s.badgePressable}
+      >
+        <View style={s.badgeMedal}>
+          <Ionicons name={icon} size={28} color={color} />
+        </View>
+      </Pressable>
+
+      {visible && (
+        <View style={s.tooltip} pointerEvents="none">
+          <Text style={s.tooltipText}>{title}</Text>
+          <View style={s.tooltipCaret} />
+        </View>
+      )}
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   return (
@@ -20,13 +59,20 @@ export default function HomeScreen() {
 
       <ScrollView contentContainerStyle={s.body}>
         <Text style={s.sectionTitle}>Lembretes:</Text>
-
         {reminders.map((r, i) => (
           <View key={i} style={s.card}>
             <Text style={s.cardTitle}>{r.title}</Text>
             <Text style={s.cardSubtitle}>{r.subtitle}</Text>
           </View>
         ))}
+
+        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Conquistas</Text>
+        <View style={s.badgesGrid}>
+          {badges.map((b, i) => (
+            <BadgeCell key={`${b.title}-${i}`} {...b} />
+          ))}
+        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Atenção as datas</Text>
+        </View>
       </ScrollView>
     </View>
   );
