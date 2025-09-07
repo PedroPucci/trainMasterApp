@@ -3,7 +3,26 @@ import { View, Text, ScrollView, Pressable } from "react-native";
 import AppHeader from "../components/header/AppHeader";
 import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { Calendar, LocaleConfig } from "react-native-calendars";
 
+/** ---- Locale PT-BR ---- */
+LocaleConfig.locales["pt-br"] = {
+  monthNames: [
+    "janeiro","fevereiro","março","abril","maio","junho",
+    "julho","agosto","setembro","outubro","novembro","dezembro"
+  ],
+  monthNamesShort: [
+    "jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"
+  ],
+  dayNames: [
+    "domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"
+  ],
+  dayNamesShort: ["dom","seg","ter","qua","qui","sex","sáb"],
+  today: "Hoje",
+};
+LocaleConfig.defaultLocale = "pt-br";
+
+/** ---- Dados de exemplo ---- */
 const reminders = [
   { title: "Progresso geral: 65% das atividades feitas", subtitle: "Curso: Fundamentos de Banco de Dados" },
   { title: "Progresso geral: 65% do curso", subtitle: "Curso: Fundamentos de React" },
@@ -11,7 +30,7 @@ const reminders = [
 
 type BadgeItem = {
   icon: keyof typeof Ionicons.glyphMap;
-  title: string;     // usado no tooltip
+  title: string; // usado no tooltip
   color: string;
 };
 
@@ -23,6 +42,7 @@ const badges: BadgeItem[] = [
   { icon: "school",                title: "3 certificações",           color: "#4F7CAC" },
 ];
 
+/** ---- Badge (ícone com tooltip no toque) ---- */
 function BadgeCell({ icon, title, color }: BadgeItem) {
   const [visible, setVisible] = React.useState(false);
 
@@ -52,12 +72,21 @@ function BadgeCell({ icon, title, color }: BadgeItem) {
   );
 }
 
+/** ---- Tela ---- */
 export default function HomeScreen() {
+  const today = new Date().toISOString().slice(0, 10);
+  const [selected, setSelected] = React.useState<string>(today);
+
   return (
     <View style={s.container}>
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
 
-      <ScrollView contentContainerStyle={s.body}>
+      <ScrollView
+        contentContainerStyle={[s.body, s.scrollContent]} // <— garante scroll suave e espaço pro footer
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* Lembretes */}
         <Text style={s.sectionTitle}>Lembretes:</Text>
         {reminders.map((r, i) => (
           <View key={i} style={s.card}>
@@ -66,12 +95,45 @@ export default function HomeScreen() {
           </View>
         ))}
 
+        {/* Conquistas (badges em grid 5 por linha) */}
         <Text style={[s.sectionTitle, { marginTop: 8 }]}>Conquistas</Text>
         <View style={s.badgesGrid}>
           {badges.map((b, i) => (
             <BadgeCell key={`${b.title}-${i}`} {...b} />
           ))}
-        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Atenção as datas</Text>
+        </View>
+
+        {/* Atenção às datas + Calendário */}
+        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Atenção às datas</Text>
+        <View style={s.calendarCard}>
+          <Calendar
+            onDayPress={(day) => setSelected(day.dateString)}
+            markedDates={{
+              [selected]: {
+                selected: true,
+                selectedColor: "#2A9D8F",
+                selectedTextColor: "#ffffff",
+              },
+            }}
+            theme={{
+              todayTextColor: "#2A9D8F",
+              arrowColor: "#2A9D8F",
+              monthTextColor: "#0F1E25",
+              textMonthFontWeight: "800",
+              textDayFontWeight: "600",
+              textDayHeaderFontWeight: "700",
+            }}
+            style={s.calendar}
+          />
+        </View>
+
+        <View style={s.legendRow}>
+         <View style={s.legendItem}>
+          <View style={[s.colorDot, { backgroundColor: "red" }]} />
+          <Text style={s.legendText}>Prazo final para avaliação</Text>
+          <View style={[s.colorDot, { backgroundColor: "gold" }]} />
+          <Text style={s.legendText}>Prazo final para atividades</Text>
+         </View>
         </View>
       </ScrollView>
     </View>

@@ -111,4 +111,59 @@ export const styles = StyleSheet.create({
     borderRightColor: "transparent",
     borderTopColor: "#111",
   },
+  calendarCard: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 24,
+    padding: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 6,
+    overflow: "hidden",
+  },
+
+  calendar: {
+    width: "100%",
+    maxWidth: 320,
+    alignSelf: "center",
+    borderRadius: 20,
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 120,
+  },
+
+  legendRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    marginTop: 10,
+    marginBottom: 8,
+  },
+
+  legendItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginRight: 16,
+    marginBottom: 8,
+  },
+
+  colorDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: "#ccc", 
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.08)",
+  },
+
+  legendText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: "#0F1E25",
+    opacity: 0.9,
+  },
 });
