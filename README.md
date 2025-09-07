@@ -45,5 +45,9 @@ Essa estrutura garante organização das pastas.
 Contém os endpoints para acesso e execução das funcionalidades:
 1. Organização das pastas:
 - **Components**: Possui todas as pastas de todas as telas.
+- **Footer**: Composta pelo arquivo tsx e ts do footer.
+- **Header**: Composta pelo arquivo tsx e ts do Header.
+- **Navigation**: Composta pelo arquivo tsx e ts do Navigation.
+- **Screens**: Composta pelo arquivo tsx e ts de todas as telas.
 ## **Assets**
 - **Assets**: Imagens do projeto.
