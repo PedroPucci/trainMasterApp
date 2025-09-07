@@ -31,6 +31,7 @@
 
 ### **2. Testar na versão Mobile**
 1. Faça o clone do projeto.
+
 **Comandos para auxiliar**
 - npx expo install expo
 - npx expo install react react-native
