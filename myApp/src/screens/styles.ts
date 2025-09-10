@@ -9,7 +9,8 @@ export const styles = StyleSheet.create({
     color: "#0F1E25",
     fontSize: 18,
     fontWeight: "700",
-    marginBottom: 12,
+    marginBottom: 27,
+    textAlign: "center",
   },
 
   card: {
@@ -166,18 +167,23 @@ export const styles = StyleSheet.create({
     color: "#0F1E25",
     opacity: 0.9,
   },
-
+  shadowWrap: {
+    borderRadius: 24,
+    marginBottom: 4,
+    shadowOffset: { width: 0, height: 6 },
+  },
   inputWrap: {
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     marginBottom: 12,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 12,
     elevation: 6,
+    overflow: "hidden",
   },
   input: {
     color: "#0F1E25",
@@ -190,7 +196,7 @@ export const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 8,
+    marginTop: 40,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
@@ -201,5 +207,59 @@ export const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
+  },
+
+  inputError: {
+    borderWidth: 1.2,
+    borderColor: "#E63946",
+  },
+  errorText: {
+    marginTop: 6,
+    color: "#E63946",
+    fontSize: 12,
+    fontWeight: "600",
+  },
+  inputErrorWrap: {
+    borderWidth: 1.2,
+    borderColor: "#E63946",
+  },
+  // picker: {
+  //   height: 48,
+  //   color: "#0F1E25",
+  //   width: "100%",
+  //   alignSelf: "center",
+  // },
+  // pickerContainer: {
+  //   alignItems: "center",
+  // },
+  // pickerItemIOS: {
+  //   textAlign: "center",
+  // },
+
+  pickerWrapper: {
+    justifyContent: "center",
+  },
+
+  pickerOverlay: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    opacity: 0,
+  },
+
+  pickerValueText: {
+    color: "#0F1E25",
+    fontSize: 14,
+    paddingVertical: 4,
+    textAlign: "left",
+  },
+
+  pickerChevron: {
+    position: "absolute",
+    right: 16,
+    top: "50%",
+    marginTop: -9,
   },
 });
