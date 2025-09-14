@@ -113,7 +113,6 @@ export default function ProfileScreen() {
       Alert.alert("Atenção", "Corrija os campos destacados.");
       return;
     }
-    //console.log("Atualizar perfil:", form);
     Alert.alert("Pronto", "Perfil atualizado com sucesso!");
   };
 
@@ -158,7 +157,6 @@ export default function ProfileScreen() {
             <TextInput
               style={[s.input, errors.birth && s.inputError]}
               value={form.birth}
-              // onChangeText={update("birth")}
               onChangeText={(t) => setForm((f) => ({ ...f, birth: maskDateBR(t) }))}
               onBlur={() => setErrors((p) => ({ ...p, birth: validateField("birth") }))}
               placeholder="Data de nascimento (dd/mm/aaaa)"
@@ -173,7 +171,6 @@ export default function ProfileScreen() {
             <TextInput
               style={[s.input, errors.doc && s.inputError]}
               value={form.doc}
-              // onChangeText={update("doc")}
               onChangeText={(t) => setForm((f) => ({ ...f, doc: maskCPF(t) }))}
               onBlur={() => setErrors((p) => ({ ...p, doc: validateField("doc") }))}
               placeholder="CPF"
@@ -184,24 +181,6 @@ export default function ProfileScreen() {
             {errors.doc ? <Text style={s.errorText}>{errors.doc}</Text> : null}
           </View>
 
-          {/* <View style={[s.inputWrap, s.pickerContainer, errors.maritalStatus && s.inputErrorWrap]}>
-            <Picker
-              selectedValue={form.maritalStatus}
-              onValueChange={(val) => {
-                update("maritalStatus")(val as string);
-                setErrors((p) => ({ ...p, maritalStatus: validateField("maritalStatus") }));
-              }}
-              style={s.picker}
-              itemStyle={Platform.OS === "ios" ? s.pickerItemIOS : undefined}
-              dropdownIconColor="#92A0A6"
-            >
-              <Picker.Item label="Selecione o estado civil" value="" color="#92A0A6" />
-              {ESTADOS_CIVIS.map((opt) => (
-                <Picker.Item key={opt} label={opt} value={opt} />
-              ))}
-            </Picker>
-          </View>
-           */}
            <View style={s.shadowWrap}>           
               <CenteredPicker
                 value={form.maritalStatus}
@@ -227,24 +206,6 @@ export default function ProfileScreen() {
                 error={errors.gender}
               />
             </View>
-
-          {/* <View style={[s.inputWrap, s.pickerContainer, errors.gender && s.inputErrorWrap]}>
-            <Picker
-              selectedValue={form.gender}
-              onValueChange={(val) => {
-                update("gender")(val as string);
-                setErrors((p) => ({ ...p, gender: validateField("gender") }));
-              }}
-              style={s.picker}
-              dropdownIconColor="#92A0A6"
-            >
-              <Picker.Item label="Selecione o gênero" value="" color="#92A0A6" />
-              {GENEROS.map((opt) => (
-                <Picker.Item key={opt} label={opt} value={opt} />
-              ))}
-            </Picker>
-          </View>
-          {errors.gender ? <Text style={s.errorText}>{errors.gender}</Text> : null} */}
 
           <TouchableOpacity style={s.btnPrimary} onPress={onSubmit} activeOpacity={0.9}>
             <Text style={s.btnPrimaryText}>Atualizar</Text>
