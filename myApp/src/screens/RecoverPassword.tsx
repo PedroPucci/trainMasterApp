@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  Modal,
   ActivityIndicator,
 } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -14,8 +15,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { styles } from "./styles";
 import LayoutAuth from "../components/layoutAuth";
+import { StyleSheet } from "react-native";
 
-// Tipagem das rotas do stack
 type RootStackParamList = {
   Login: undefined;
   Register: undefined;
@@ -27,7 +28,6 @@ type NavigationProp = NativeStackNavigationProp<
   "RecoverPassword"
 >;
 
-// Schema de validação separado
 const emailSchema = z.object({
   email: z
     .string()
@@ -51,7 +51,15 @@ export default function RecoverPassword() {
   const [step, setStep] = useState<"email" | "password">("email");
   const [loading, setLoading] = useState(false);
 
-  // Form para etapa 1 (email)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [feedback, setFeedback] = useState<{
+    type: "success" | "error";
+    message: string;
+  }>({
+    type: "success",
+    message: "",
+  });
+
   const {
     control: emailControl,
     handleSubmit: handleEmailSubmit,
@@ -61,7 +69,6 @@ export default function RecoverPassword() {
     defaultValues: { email: "" },
   });
 
-  // Form para etapa 2 (nova senha)
   const {
     control: passwordControl,
     handleSubmit: handlePasswordSubmit,
@@ -76,10 +83,18 @@ export default function RecoverPassword() {
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 1500)); // trocar chamada na API
 
-      Alert.alert("Sucesso", "Verifique seu e-mail para continuar!");
+      setFeedback({
+        type: "success",
+        message: "Verifique seu e-mail para continuar!",
+      });
+      setModalVisible(true);
       setStep("password");
     } catch {
-      Alert.alert("Erro", "Não foi possível enviar o e-mail de recuperação.");
+      setFeedback({
+        type: "error",
+        message: "Não foi possível enviar o e-mail de recuperação.",
+      });
+      setModalVisible(true);
     } finally {
       setLoading(false);
     }
@@ -90,10 +105,19 @@ export default function RecoverPassword() {
       setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 1500)); // trocar por chamada na API
 
-      Alert.alert("Sucesso", "Sua senha foi redefinida com sucesso!");
-      navigation.navigate("Login");
+      setFeedback({
+        type: "success",
+        message: "Sua senha foi redefinida com sucesso!",
+      });
+      setModalVisible(true);
+
+      // navigation.navigate("Login");
     } catch {
-      Alert.alert("Erro", "Não foi possível redefinir a senha.");
+      setFeedback({
+        type: "error",
+        message: "Não foi possível redefinir a senha.",
+      });
+      setModalVisible(true);
     } finally {
       setLoading(false);
     }
@@ -109,7 +133,6 @@ export default function RecoverPassword() {
       }
     >
       <View style={{ display: "flex", width: "100%" }}>
-        {/* Step 1 - Formulário de Email */}
         {step === "email" && (
           <>
             <Controller
@@ -139,10 +162,7 @@ export default function RecoverPassword() {
             )}
 
             <TouchableOpacity
-              style={[
-                styles.btnPrimary,
-                loading ? { opacity: 0.6 } : null,
-              ]}
+              style={[styles.btnPrimary, loading ? { opacity: 0.6 } : null]}
               onPress={handleEmailSubmit(handleRecoverEmail)}
               disabled={loading}
             >
@@ -155,7 +175,6 @@ export default function RecoverPassword() {
           </>
         )}
 
-        {/* Step 2 - Formulário de Nova Senha */}
         {step === "password" && (
           <>
             <Controller
@@ -186,10 +205,7 @@ export default function RecoverPassword() {
             )}
 
             <TouchableOpacity
-              style={[
-                styles.btnPrimary,
-                loading ? { opacity: 0.6 } : null,
-              ]}
+              style={[styles.btnPrimary, loading ? { opacity: 0.6 } : null]}
               onPress={handlePasswordSubmit(handleResetPassword)}
               disabled={loading}
             >
@@ -202,7 +218,6 @@ export default function RecoverPassword() {
           </>
         )}
 
-        {/* Links adicionais */}
         <TouchableOpacity
           onPress={() => navigation.navigate("Login")}
           disabled={loading}
@@ -235,6 +250,81 @@ export default function RecoverPassword() {
           </Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={modalStyles.overlay}>
+          <View style={modalStyles.box}>
+            {/* Ícone condicional */}
+            <Text
+              style={[
+                modalStyles.icon,
+                { color: feedback.type === "success" ? "#2ecc71" : "#e74c3c" },
+              ]}
+            >
+              {feedback.type === "success" ? "✔️" : "❌"}
+            </Text>
+
+            {/* Mensagem dinâmica */}
+            <Text style={modalStyles.message}>{feedback.message}</Text>
+
+            {/* Botão fechar */}
+            <TouchableOpacity
+              style={modalStyles.closeBtn}
+              onPress={() => {
+                setModalVisible(false);
+                if (feedback.type === "success" && step === "password") {
+                  navigation.navigate("Login");
+                }
+              }}
+            >
+              <Text style={modalStyles.closeBtnText}>Fechar</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </LayoutAuth>
   );
 }
+const modalStyles = StyleSheet.create({
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  box: {
+    backgroundColor: "#fff",
+    padding: 25,
+    borderRadius: 12,
+    width: "80%",
+    alignItems: "center",
+    elevation: 5,
+  },
+  icon: {
+    fontSize: 40,
+    marginBottom: 10,
+  },
+  message: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#000",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  closeBtn: {
+    backgroundColor: "#50C2C9",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 8,
+  },
+  closeBtnText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+});
