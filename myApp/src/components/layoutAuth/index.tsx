@@ -12,6 +12,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./styles";
 
+
 type LayoutAuthProp = {
   title: string;
   subtitle: string;
@@ -32,17 +33,21 @@ export default function LayoutAuth({
           resizeMode="contain"
         />
         <View style={styles.body}>
-          {/* Logo */}
-          <Image
-            source={require("../../../assets/images/logo.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
-
-          {/* Título */}
-          <Text style={styles.sectionTitle}>{title}</Text>
-          <Text style={styles.sectionSubtitle}>{subtitle}</Text>
-          {children}
+          <View style={styles.header}>
+            {/* Título */}
+            <Text style={styles.sectionTitle}>{title}</Text>
+            <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+          </View>
+          <View style={{ display: "flex", width: "100%" }}>
+            {/* Logo */}
+            <Image
+              source={require("../../../assets/images/logo.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+            {children}
+          </View>
+          <View></View>
         </View>
       </View>
     </ScrollView>
