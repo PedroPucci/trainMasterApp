@@ -91,10 +91,7 @@ export default function LoginScreen({ navigation }: Props) {
       subtitle="Digite suas credenciais para acessar sua conta:"
     >
       <View style={styles.container}>
-        <Text style={styles.instruction}>
-          Digite seu CPF e senha para continuar:
-        </Text>
-
+      
         <TextInput
           placeholder="CPF"
           style={[styles.input, cpfError ? styles.inputError : null]}
