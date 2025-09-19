@@ -9,16 +9,26 @@ import {
   Alert,
 } from "react-native";
 import LayoutAuth from "../components/layoutAuth";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
+
+
+// Tipagem das rotas do stack
 type RootStackParamList = {
   Login: undefined;
+  Register: undefined;
+  RecoverPassword: undefined;
   Home: undefined;
 };
 
-type Props = NativeStackScreenProps<RootStackParamList, "Login">;
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "RecoverPassword"
+>;
 
-export default function LoginScreen({ navigation }: Props) {
+export default function LoginScreen() {
+  const navigation = useNavigation<NavigationProp>();
   const [cpf, setCpf] = useState("");
   const [senha, setSenha] = useState("");
   const [cpfError, setCpfError] = useState("");
@@ -74,7 +84,7 @@ export default function LoginScreen({ navigation }: Props) {
 
       if (response.ok) {
         Alert.alert("Sucesso", "Login realizado com sucesso!");
-        navigation.replace("Home"); 
+        navigation.navigate("Home"); 
       } else {
         Alert.alert("Erro", data.message || "CPF ou senha inválidos.");
       }
@@ -120,7 +130,7 @@ export default function LoginScreen({ navigation }: Props) {
         />
         {senhaError && <Text style={styles.errorText}>{senhaError}</Text>}
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("RecoverPassword")} >
           <Text style={styles.forgotPassword}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
 
@@ -138,7 +148,7 @@ export default function LoginScreen({ navigation }: Props) {
 
         <Text style={styles.registerText}>
           Ainda não tem conta?{" "}
-          <Text style={styles.registerLink}>Registrar</Text>
+          <Text style={styles.registerLink}  onPress={() => navigation.navigate("Register")} >Registrar</Text>
         </Text>
       </View>
     </LayoutAuth>
