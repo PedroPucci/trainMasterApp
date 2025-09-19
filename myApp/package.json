@@ -14,8 +14,12 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
+<<<<<<< HEAD
+    "@react-native-picker/picker": "^2.11.1",
+=======
     "@hookform/resolvers": "^5.2.2",
     "@react-native-picker/picker": "2.11.1",
+>>>>>>> main
     "@react-navigation/bottom-tabs": "^7.4.7",
     "@react-navigation/native": "^7.1.17",
     "expo": "latest",
@@ -34,8 +38,12 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+<<<<<<< HEAD
+    "react-native-web": "~0.20.0"
+=======
     "react-native-web": "~0.20.0",
     "zod": "^4.1.8"
+>>>>>>> main
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
