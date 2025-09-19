@@ -262,4 +262,22 @@ export const styles = StyleSheet.create({
     top: "50%",
     marginTop: -9,
   },
+  circleLg: {
+    position: "absolute",
+    top: -70,
+    left: 0,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "rgba(80, 194, 201,0.35)",
+  },
+  circleSm: {
+    position: "absolute",
+    top: 0,
+    left: -100,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "rgba(80, 194, 201,0.35)",
+  },
 });
