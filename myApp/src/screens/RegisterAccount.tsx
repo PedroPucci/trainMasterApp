@@ -60,9 +60,9 @@ export default function RegisterAccountScreen() {
             case "doc":
                 return cpf(form.doc);
             case "password":
-                return required(form.password, "Senha");
+                return compose((v) => required(v, "Senha"), minLength(6, "Senha"))(form.password);
             case "confirmPassword":
-                return compose((v) => required(v, "Confirmar senha"), passwordsMatch(form.password))(form.confirmPassword);
+                return compose((v) => required(v, "Confirmar senha"), minLength(6, "Senha"), passwordsMatch(form.password))(form.confirmPassword);
             default:
                 return null;
         }
