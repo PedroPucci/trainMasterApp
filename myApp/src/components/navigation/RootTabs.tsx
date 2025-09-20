@@ -3,9 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileEditScreen from "../../screens/ProfileScreen";
-import RegisterAccountScreen from "../../screens/RegisterAccount";
-import RecoverPassword from "../../screens/RecoverPassword";
-import LoginScreen from "../../screens/LoginScreen";
 
 const AprendizadoScreen = () => null;
 const BuscarScreen      = () => null;
@@ -32,15 +29,7 @@ export function RootTabs() {
 
 export default function RootNavigator() {
   return (
-    <Stack.Navigator 
-      screenOptions={{ headerShown: false }} 
-      initialRouteName="Login"  // 👈 aqui define a primeira tela
-    >
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="Register" component={RegisterAccountScreen} />
-      <Stack.Screen name="RecoverPassword" component={RecoverPassword} />
-
-      {/* Depois as tabs normais */}
+    <Stack.Navigator>
       <Stack.Screen name="Home" component={RootTabs} />
     </Stack.Navigator>
   );
