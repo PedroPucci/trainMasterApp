@@ -1,18 +1,15 @@
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#F0F4F3" },
-
+  container: { flex: 1, backgroundColor: "#E9F1F0" },
   body: { padding: 16, paddingTop: 12 },
-
+  scrollContent: { flexGrow: 1, paddingBottom: 120 },
   sectionTitle: {
     color: "#0F1E25",
     fontSize: 18,
     fontWeight: "700",
-    marginBottom: 27,
-    textAlign: "center",
+    marginBottom: 12,
   },
-
   card: {
     backgroundColor: "#FFFFFF",
     borderRadius: 24,
@@ -25,28 +22,23 @@ export const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-
   cardTitle: {
     color: "#0F1E25",
     fontSize: 17,
     fontWeight: "800",
     marginBottom: 6,
   },
-
   cardSubtitle: {
     color: "#0F1E25",
     fontSize: 15,
     fontWeight: "700",
     opacity: 0.9,
   },
-
-  /* ======== BADGES (grid com no máximo 5 por linha) ======== */
   badgesGrid: {
     flexDirection: "row",
     flexWrap: "wrap",
     marginHorizontal: -6,
   },
-
   badgeCell: {
     width: "20%",
     paddingHorizontal: 6,
@@ -54,12 +46,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
   },
-
-  badgePressable: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
+  badgePressable: { alignItems: "center", justifyContent: "center" },
   badgeMedal: {
     width: 56,
     height: 56,
@@ -73,8 +60,6 @@ export const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
-
-  /* ======== TOOLTIP ======== */
   tooltip: {
     position: "absolute",
     bottom: 64,
@@ -91,13 +76,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     zIndex: 2,
   },
-
-  tooltipText: {
-    color: "#fff",
-    fontSize: 12,
-    textAlign: "center",
-  },
-
+  tooltipText: { color: "#fff", fontSize: 12, textAlign: "center" },
   tooltipCaret: {
     position: "absolute",
     bottom: -6,
@@ -123,17 +102,11 @@ export const styles = StyleSheet.create({
     elevation: 6,
     overflow: "hidden",
   },
-
   calendar: {
     width: "100%",
     maxWidth: 320,
     alignSelf: "center",
     borderRadius: 20,
-  },
-
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 120,
   },
 
   legendRow: {
@@ -143,7 +116,6 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 8,
   },
-
   legendItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -151,7 +123,6 @@ export const styles = StyleSheet.create({
     marginRight: 16,
     marginBottom: 8,
   },
-
   colorDot: {
     width: 12,
     height: 12,
@@ -160,82 +131,121 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "rgba(0,0,0,0.08)",
   },
-
   legendText: {
     fontSize: 12,
     fontWeight: "600",
     color: "#0F1E25",
     opacity: 0.9,
   },
-  shadowWrap: {
-    borderRadius: 24,
-    marginBottom: 4,
-    shadowOffset: { width: 0, height: 6 },
-  },
-  inputWrap: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    marginBottom: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 6,
-    overflow: "hidden",
-  },
-  input: {
+  content: { padding: 24, paddingTop: 36, paddingBottom: 42 },
+  title: {
     color: "#0F1E25",
-    fontSize: 14,
-    paddingVertical: 4,
+    fontSize: 25,
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 6,
   },
-  btnPrimary: {
-    backgroundColor: "#50C2C9",
-    height: 52,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  btnPrimaryText: {
-    color: "#FFFFFF",
+  subtitle: {
+    color: "#4A5A61",
     fontSize: 16,
+    textAlign: "center",
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  logo: { width: 190, height: 160, alignSelf: "center", marginTop: 6 },
+  logoCaption: {
+    textAlign: "center",
+    color: "#0F1E25",
     fontWeight: "700",
+    marginBottom: 16,
   },
 
-  inputError: {
-    borderWidth: 1.2,
-    borderColor: "#E63946",
+  inputWrap: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 10,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.07,
+    shadowRadius: 8,
   },
+  input: { color: "#0F1E25", fontSize: 14, paddingRight: 32 },
+
+  helper: {
+    textAlign: "center",
+    color: "#0F1E25",
+    opacity: 0.8,
+    marginTop: 18,
+    marginBottom: 6,
+  },
+  inputWrapDark: {
+    backgroundColor: "#9BA2A6",
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 6,
+  },
+  inputDark: { color: "#fff", fontSize: 14, paddingRight: 32, },
+  inputError: { borderWidth: 1.2, borderColor: "#E63946" },
   errorText: {
     marginTop: 6,
     color: "#E63946",
     fontSize: 12,
     fontWeight: "600",
   },
+
+  eye: { position: "absolute", right: 16, top: "50%", marginTop: 2 },
+
+  btnPrimary: {
+    marginTop: 22,
+    backgroundColor: "#50C2C9",
+    height: 52,
+    borderRadius: 14,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+  },
+  btnText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+
+  forgotText: {
+    textAlign: "center",
+    color: "#6BBFC5",
+    marginTop: 12,
+    fontWeight: "600",
+  },
+  registerText: { textAlign: "center", marginTop: 18, color: "#0F1E25" },
+  registerLink: { color: "#2CB1B8", fontWeight: "700" },
+
+  bubbleLg: {
+    position: "absolute",
+    top: -80,
+    left: -60,
+    width: 220,
+    height: 220,
+    borderRadius: 110,
+    backgroundColor: "#CFEDEA",
+  },
+  bubbleSm: {
+    position: "absolute",
+    top: -10,
+    left: 110,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: "#BEE3E0",
+  },
+
   inputErrorWrap: {
     borderWidth: 1.2,
     borderColor: "#E63946",
   },
-  // picker: {
-  //   height: 48,
-  //   color: "#0F1E25",
-  //   width: "100%",
-  //   alignSelf: "center",
-  // },
-  // pickerContainer: {
-  //   alignItems: "center",
-  // },
-  // pickerItemIOS: {
-  //   textAlign: "center",
-  // },
-
   pickerWrapper: {
     justifyContent: "center",
   },
@@ -255,29 +265,27 @@ export const styles = StyleSheet.create({
     paddingVertical: 4,
     textAlign: "left",
   },
-
   pickerChevron: {
     position: "absolute",
     right: 16,
     top: "50%",
     marginTop: -9,
   },
-  circleLg: {
-    position: "absolute",
-    top: -70,
-    left: 0,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(80, 194, 201,0.35)",
+  shadowWrap: {
+    borderRadius: 24,
+    marginBottom: 4,
+    shadowOffset: { width: 0, height: 6 },
   },
-  circleSm: {
+  btnPrimaryText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  copy: {
     position: "absolute",
-    top: 0,
-    left: -100,
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(80, 194, 201,0.35)",
+    right: 12,
+    top: "50%",
+    marginTop: -5,
+    padding: 6,
   },
 });
