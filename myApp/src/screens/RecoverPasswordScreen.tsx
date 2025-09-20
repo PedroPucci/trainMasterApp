@@ -69,8 +69,6 @@ export default function RecoverPasswordScreen({ navigation }: any) {
   setLoading(true);
   try {
     const url = `${BASE_URL}/auth/reset-password`;
-    console.log("POST", url);
-
     const res = await fetchComTimeout(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -80,8 +78,6 @@ export default function RecoverPasswordScreen({ navigation }: any) {
     const raw = await res.text();
     let data: any = null;
     try { data = JSON.parse(raw); } catch {}
-
-    console.log("STATUS", res.status, "RAW", raw);
 
     if (!res.ok) {
       const msg = data?.message || raw || `HTTP ${res.status}`;
@@ -176,24 +172,14 @@ export default function RecoverPasswordScreen({ navigation }: any) {
           </TouchableOpacity>
         </Pressable>
 
-        {/* <TouchableOpacity
+        <TouchableOpacity
           style={[s.btnPrimary, loading && { opacity: 0.7 }]}
           activeOpacity={0.9}
-          onPress={onSubmit}
+          onPress={handleRecuperar}
           disabled={loading}
         >
-          {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Enviar</Text>}
-        </TouchableOpacity> */}
-
-        <TouchableOpacity
-  style={[s.btnPrimary, loading && { opacity: 0.7 }]}
-  activeOpacity={0.9}
-  onPress={handleRecuperar}
-  disabled={loading}
->
-  {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Gerar nova senha</Text>}
-</TouchableOpacity>
-
+          {loading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Gerar nova senha</Text>}
+        </TouchableOpacity>
 
         <Text style={s.registerText}>
           Ainda não tem conta?
