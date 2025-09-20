@@ -1,36 +1,50 @@
+import React from "react";
+import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
 
-const AprendizadoScreen   = () => null;
-const BuscarScreen        = () => null;
-const MenuScreen          = () => null;
-
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
-
-export function RootTabs() {
+function AprendizadoScreen() {
   return (
-    <Tab.Navigator
-      initialRouteName="Inicio"
-      tabBar={(props) => <FooterMenu {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
-      <Tab.Screen name="Inicio"       component={HomeScreen} />
-      <Tab.Screen name="Perfil"       component={ProfileScreen} />
-      <Tab.Screen name="Aprendizado"  component={AprendizadoScreen} options={{ tabBarLabel: "Aprendizado" }} />
-      <Tab.Screen name="Buscar"       component={BuscarScreen} />
-      <Tab.Screen name="Menu"         component={MenuScreen} />
-    </Tab.Navigator>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Aprendizado</Text>
+    </View>
+  );
+}
+function BuscarScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Buscar</Text>
+    </View>
+  );
+}
+function MenuScreen() {
+  return (
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <Text>Menu</Text>
+    </View>
   );
 }
 
-export default function RootNavigator() {
+const Tab = createBottomTabNavigator();
+
+export default function RootTabs() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Home" component={RootTabs} />
-    </Stack.Navigator>
+    <Tab.Navigator
+      initialRouteName="Inicio"
+      screenOptions={{ headerShown: false }}
+      tabBar={(props) => <FooterMenu {...props} />}
+    >
+      <Tab.Screen name="Inicio" component={HomeScreen} />
+      <Tab.Screen name="Perfil" component={ProfileScreen} />
+      <Tab.Screen
+        name="Aprendizado"
+        component={AprendizadoScreen}
+        options={{ tabBarLabel: "Aprendizado" }}
+      />
+      <Tab.Screen name="Buscar" component={BuscarScreen} />
+      <Tab.Screen name="Menu" component={MenuScreen} />
+    </Tab.Navigator>
   );
 }

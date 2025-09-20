@@ -23,15 +23,12 @@ export default function FooterMenu({
     <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 12) }]}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
-
         const label =
           (options.tabBarLabel as string) ??
           (options.title as string) ??
           route.name;
-
         const isFocused = state.index === index;
         const color = isFocused ? "#FFFFFF" : "rgba(255,255,255,0.85)";
-
         const onPress = () => {
           const ev = navigation.emit({
             type: "tabPress",
@@ -46,8 +43,6 @@ export default function FooterMenu({
         const onLongPress = () => {
           navigation.emit({ type: "tabLongPress", target: route.key });
         };
-
-        // usa o nome da rota → ícone não quebra quando mudar o rótulo
         const baseIcon = ICONS[route.name] ?? "ellipse";
 
         return (
