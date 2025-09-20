@@ -1,9 +1,10 @@
 import * as React from "react";
-import { View, Text, ScrollView, Pressable } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import AppHeader from "../components/header/AppHeader";
 import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Calendar, LocaleConfig } from "react-native-calendars";
+import { useAppTheme } from "../components/theme/ThemeProvider";
 
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
@@ -42,22 +43,17 @@ const badges: BadgeItem[] = [
 
 function BadgeCell({ icon, title, color }: BadgeItem) {
   const [visible, setVisible] = React.useState(false);
-
   return (
     <View style={s.badgeCell}>
-      <Pressable
-        onPressIn={() => setVisible(true)}
-        onPressOut={() => setVisible(false)}
-        onLongPress={() => setVisible(true)}
-        delayLongPress={150}
-        accessibilityLabel={title}
-        accessibilityHint="Toque e segure para ver a dica"
+      <View
+        onTouchStart={() => setVisible(true)}
+        onTouchEnd={() => setVisible(false)}
         style={s.badgePressable}
       >
         <View style={s.badgeMedal}>
           <Ionicons name={icon} size={28} color={color} />
         </View>
-      </Pressable>
+      </View>
 
       {visible && (
         <View style={s.tooltip} pointerEvents="none">
@@ -72,9 +68,16 @@ function BadgeCell({ icon, title, color }: BadgeItem) {
 export default function HomeScreen() {
   const today = new Date().toISOString().slice(0, 10);
   const [selected, setSelected] = React.useState<string>(today);
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
+  const hardMuted = isDark ? "#A3A3A3" : "#666666";
+  const hardBorder = isDark ? "#222222" : "#E5E5E5";
+  const primary = theme.colors.primary;
 
   return (
-    <View style={s.container}>
+    <View style={[s.container, { backgroundColor: hardBg }]}>
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
 
       <ScrollView
@@ -82,52 +85,100 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-
-        <Text style={s.sectionTitle}>Lembretes:</Text>
+        <Text style={[s.sectionTitle, { color: hardText }]}>Lembretes</Text>
         {reminders.map((r, i) => (
-          <View key={i} style={s.card}>
-            <Text style={s.cardTitle}>{r.title}</Text>
-            <Text style={s.cardSubtitle}>{r.subtitle}</Text>
+          <View
+            key={i}
+            style={[
+              s.card,
+              { backgroundColor: hardBg, borderColor: hardBorder },
+            ]}
+          >
+            <Text style={[s.cardTitle, { color: hardText }]}>{r.title}</Text>
+            <Text style={[s.cardSubtitle, { color: hardMuted }]}>{r.subtitle}</Text>
           </View>
         ))}
 
-        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Conquistas</Text>
+        <Text style={[s.sectionTitle, { marginTop: 8, color: hardText }]}>
+          Conquistas
+        </Text>
         <View style={s.badgesGrid}>
           {badges.map((b, i) => (
             <BadgeCell key={`${b.title}-${i}`} {...b} />
           ))}
         </View>
 
-        <Text style={[s.sectionTitle, { marginTop: 8 }]}>Atenção às datas</Text>
-        <View style={s.calendarCard}>
+        <Text style={[s.sectionTitle, { marginTop: 8, color: hardText }]}>
+          Atenção às datas
+        </Text>
+        <View
+          style={[
+            s.calendarCard,
+            {
+              backgroundColor: isDark ? "#000000" : "#FFFFFF",
+              borderColor: isDark ? "#222222" : "#E5E5E5",
+            },
+          ]}
+        >
           <Calendar
+            key={isDark ? "cal-dark" : "cal-light"}
             onDayPress={(day) => setSelected(day.dateString)}
             markedDates={{
               [selected]: {
                 selected: true,
-                selectedColor: "#2A9D8F",
+                selectedColor: primary,
                 selectedTextColor: "#ffffff",
               },
             }}
-            theme={{
-              todayTextColor: "#2A9D8F",
-              arrowColor: "#2A9D8F",
-              monthTextColor: "#0F1E25",
-              textMonthFontWeight: "800",
-              textDayFontWeight: "600",
-              textDayHeaderFontWeight: "700",
-            }}
-            style={s.calendar}
+            theme={
+              isDark
+                ? {
+                    calendarBackground: "#000000",
+                    monthTextColor: "#FFFFFF",
+                    textSectionTitleColor: "#A3A3A3",
+                    dayTextColor: "#FFFFFF",
+                    textDisabledColor: "#A3A3A3",
+                    arrowColor: primary,
+                    indicatorColor: primary,
+                    todayTextColor: primary,
+                    todayBackgroundColor: "rgba(96,165,250,0.12)",
+                    textMonthFontWeight: "800",
+                    textDayFontWeight: "600",
+                    textDayHeaderFontWeight: "700",
+                    dotColor: primary,
+                    selectedDotColor: "#ffffff",
+                  }
+                : {
+                    calendarBackground: "#FFFFFF",
+                    monthTextColor: "#000000",
+                    textSectionTitleColor: "#666666",
+                    dayTextColor: "#000000",
+                    textDisabledColor: "#666666",
+                    arrowColor: primary,
+                    indicatorColor: primary,
+                    todayTextColor: primary,
+                    textMonthFontWeight: "800",
+                    textDayFontWeight: "600",
+                    textDayHeaderFontWeight: "700",
+                    dotColor: primary,
+                    selectedDotColor: "#ffffff",
+                  }
+            }
+            style={[s.calendar, { backgroundColor: isDark ? "#000000" : "#FFFFFF" }]}
           />
         </View>
 
         <View style={s.legendRow}>
-         <View style={s.legendItem}>
-          <View style={[s.colorDot, { backgroundColor: "red" }]} />
-          <Text style={s.legendText}>Prazo final para avaliação</Text>
-          <View style={[s.colorDot, { backgroundColor: "gold" }]} />
-          <Text style={s.legendText}>Prazo final para atividades</Text>
-         </View>
+          <View style={s.legendItem}>
+            <View style={[s.colorDot, { backgroundColor: "red" }]} />
+            <Text style={[s.legendText, { color: hardText }]}>
+              Prazo final para avaliação
+            </Text>
+            <View style={[s.colorDot, { backgroundColor: "gold" }]} />
+            <Text style={[s.legendText, { color: hardText }]}>
+              Prazo final para atividades
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>

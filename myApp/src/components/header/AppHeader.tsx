@@ -3,6 +3,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { styles } from "../header/styles";
+import { useAppTheme } from "../theme/ThemeProvider";
 
 type RootStackParamList = {
   Entrar: undefined;
@@ -20,6 +21,7 @@ type Props = {
 export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const { mode, setMode } = useAppTheme();
 
   const handleLogout = async () => {
     try {
@@ -37,15 +39,51 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
     </View>
   );
 
+  const IconButton = ({
+    active,
+    onPress,
+    icon,
+  }: {
+    active: boolean;
+    onPress: () => void;
+    icon: keyof typeof Ionicons.glyphMap;
+  }) => (
+    <Pressable
+      onPress={onPress}
+      style={{
+        padding: 8,
+        borderRadius: 999,
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.5)",
+        backgroundColor: active ? "rgba(255,255,255,0.25)" : "transparent",
+        marginLeft: 8,
+      }}
+    >
+      <Ionicons name={icon} size={18} color="#ffffff" />
+    </Pressable>
+  );
+
   return (
     <View style={[styles.container, { paddingTop: insets.top + 6 }]}>
       <View style={styles.circleLg} />
       <View style={styles.circleSm} />
 
       <View style={styles.topRow}>
-        <Pressable onPress={handleLogout} style={{ marginLeft: "auto" }}>
-          <Text style={styles.logout}>Sair</Text>
-        </Pressable>
+        <View style={{ marginLeft: "auto", flexDirection: "row", alignItems: "center" }}>
+          <IconButton
+            icon="sunny-outline"
+            active={mode === "light"}
+            onPress={() => setMode("light")}
+          />
+          <IconButton
+            icon="moon"
+            active={mode === "dark"}
+            onPress={() => setMode("dark")}
+          />
+          <Pressable onPress={handleLogout} style={{ marginLeft: 10 }}>
+            <Text style={styles.logout}>Sair</Text>
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.bottomRow}>
