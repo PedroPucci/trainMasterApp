@@ -56,11 +56,21 @@ export const birthDateBR = (v: string): FieldError => {
   return null;
 };
 
-export const oneOf =
-  (options: string[], label = "Campo") =>
-  (v: string): FieldError => {
-    if (!v.trim()) return `${label} é obrigatório`;
-    return options.map((o) => o.toLowerCase()).includes(v.trim().toLowerCase())
-      ? null
-      : `${label} inválido`;
-  };
+export const oneOf =  (options: string[], label = "Campo") =>
+    (v: string): FieldError => {
+      if (!v.trim()) return `${label} é obrigatório`;
+      return options.map((o) => o.toLowerCase()).includes(v.trim().toLowerCase())
+        ? null
+        : `${label} inválido`;
+    };
+
+export const minLength =
+  (n: number, label = "Campo") =>
+  (v: string): FieldError =>
+    v.trim().length >= n ? null : `${label} deve ter ao menos ${n} caracteres`;
+
+export const passwordsMatch =
+  (passwordValue: string) =>
+  (confirmValue: string): FieldError =>
+    confirmValue === passwordValue ? null : "Confirmar senha não confere";
+

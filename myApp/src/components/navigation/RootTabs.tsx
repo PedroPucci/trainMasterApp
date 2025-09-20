@@ -1,4 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
@@ -8,8 +9,9 @@ const BuscarScreen        = () => null;
 const MenuScreen          = () => null;
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-export default function RootTabs() {
+export function RootTabs() {
   return (
     <Tab.Navigator
       initialRouteName="Inicio"
@@ -22,5 +24,13 @@ export default function RootTabs() {
       <Tab.Screen name="Buscar"       component={BuscarScreen} />
       <Tab.Screen name="Menu"         component={MenuScreen} />
     </Tab.Navigator>
+  );
+}
+
+export default function RootNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={RootTabs} />
+    </Stack.Navigator>
   );
 }
