@@ -5,7 +5,6 @@ import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 
-/** ---- Locale PT-BR ---- */
 LocaleConfig.locales["pt-br"] = {
   monthNames: [
     "janeiro","fevereiro","março","abril","maio","junho",
@@ -22,15 +21,14 @@ LocaleConfig.locales["pt-br"] = {
 };
 LocaleConfig.defaultLocale = "pt-br";
 
-/** ---- Dados de exemplo ---- */
 const reminders = [
-  { title: "Progresso geral: 65% das atividades feitas", subtitle: "Curso: Fundamentos de Banco de Dados" },
-  { title: "Progresso geral: 65% do curso", subtitle: "Curso: Fundamentos de React" },
+  { title: "Progresso: 65% das atividades feitas", subtitle: "Curso: Fundamentos de React" },
+  { title: "Progresso: 65% do curso", subtitle: "Curso: Fundamentos de React" },
 ];
 
 type BadgeItem = {
   icon: keyof typeof Ionicons.glyphMap;
-  title: string; // usado no tooltip
+  title: string;
   color: string;
 };
 
@@ -42,7 +40,6 @@ const badges: BadgeItem[] = [
   { icon: "school",                title: "3 certificações",           color: "#4F7CAC" },
 ];
 
-/** ---- Badge (ícone com tooltip no toque) ---- */
 function BadgeCell({ icon, title, color }: BadgeItem) {
   const [visible, setVisible] = React.useState(false);
 
@@ -72,7 +69,6 @@ function BadgeCell({ icon, title, color }: BadgeItem) {
   );
 }
 
-/** ---- Tela ---- */
 export default function HomeScreen() {
   const today = new Date().toISOString().slice(0, 10);
   const [selected, setSelected] = React.useState<string>(today);
@@ -82,11 +78,11 @@ export default function HomeScreen() {
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
 
       <ScrollView
-        contentContainerStyle={[s.body, s.scrollContent]} // <— garante scroll suave e espaço pro footer
+        contentContainerStyle={[s.body, s.scrollContent]}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Lembretes */}
+
         <Text style={s.sectionTitle}>Lembretes:</Text>
         {reminders.map((r, i) => (
           <View key={i} style={s.card}>
@@ -95,7 +91,6 @@ export default function HomeScreen() {
           </View>
         ))}
 
-        {/* Conquistas (badges em grid 5 por linha) */}
         <Text style={[s.sectionTitle, { marginTop: 8 }]}>Conquistas</Text>
         <View style={s.badgesGrid}>
           {badges.map((b, i) => (
@@ -103,7 +98,6 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* Atenção às datas + Calendário */}
         <Text style={[s.sectionTitle, { marginTop: 8 }]}>Atenção às datas</Text>
         <View style={s.calendarCard}>
           <Calendar
