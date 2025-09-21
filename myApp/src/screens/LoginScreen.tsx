@@ -8,6 +8,7 @@ import { styles as s } from "./styles";
 import { maskCPF } from "../components/utils/masks";
 import { required, cpf as cpfValidator } from "../components/utils/validators";
 import * as Clipboard from "expo-clipboard";
+import { CommonActions } from "@react-navigation/native";
 
 export default function LoginScreen({ navigation }: any) {
   const [cpf, setCpf] = useState("");
@@ -15,10 +16,10 @@ export default function LoginScreen({ navigation }: any) {
   const [showPwd, setShowPwd] = useState(false);
 
   const copyPassword = async () => {
-  if (!password) return;
+    if (!password) return;
     try {
       await Clipboard.setStringAsync(password);
-    } catch (e) {
+    } catch {
       Alert.alert("Erro", "Não foi possível copiar a senha.");
     }
   };
@@ -47,7 +48,20 @@ export default function LoginScreen({ navigation }: any) {
 
   const onSubmit = () => {
     if (!validateForm()) return;
-    navigation.reset({ index: 0, routes: [{ name: "Tabs" }] });
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: "App",
+            params: {
+              screen: "HomeTabs",
+              params: { screen: "Inicio" },
+            },
+          },
+        ],
+      })
+    );
   };
 
   return (

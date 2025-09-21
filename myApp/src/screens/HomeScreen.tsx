@@ -78,7 +78,7 @@ export default function HomeScreen() {
 
   return (
     <View style={[s.container, { backgroundColor: hardBg }]}>
-      <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
+      <AppHeader userName="Lydia" onLogout={() => og("Sair")} />
 
       <ScrollView
         contentContainerStyle={[s.body, s.scrollContent]}

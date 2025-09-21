@@ -10,6 +10,7 @@ type RootStackParamList = {
   Home: undefined;
   Recover: undefined;
   Tabs: undefined;
+  App: undefined;
 };
 
 type Props = {
@@ -68,7 +69,7 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
       <View style={styles.circleLg} />
       <View style={styles.circleSm} />
 
-      <View style={styles.topRow}>
+      <View style={[styles.topRow, { flexDirection: "row", alignItems: "center" }]}>
         <View style={{ marginLeft: "auto", flexDirection: "row", alignItems: "center" }}>
           <IconButton
             icon="sunny-outline"
@@ -85,7 +86,6 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
           </Pressable>
         </View>
       </View>
-
       <View style={styles.bottomRow}>
         {Avatar}
         <Text style={styles.greeting}>
