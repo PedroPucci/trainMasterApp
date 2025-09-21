@@ -8,10 +8,27 @@ import {
   StyleSheet,
 } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useNavigation, NavigatorScreenParams } from "@react-navigation/native";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
+
+type TabParamList = {
+  Inicio: undefined;
+  Perfil: undefined;
+  Aprendizado: undefined;
+  Buscar: undefined;
+  Menu: undefined;
+};
+
+type DrawerParamList = {
+  HomeTabs: NavigatorScreenParams<TabParamList>;
+  Department: undefined;
+};
+
+type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
 function AprendizadoScreen() {
   return (
@@ -35,16 +52,22 @@ function MenuScreen() {
   );
 }
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<TabParamList>();
 
 export default function RootTabs() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const items = [
-    { key: "home",        label: "Home",                 icon: "home-outline",            onPress: () => {} },
-    { key: "perfil",      label: "Perfil",               icon: "person-outline",          onPress: () => {} },
-    { key: "aprendizado", label: "Aprendizado",          icon: "book-outline",            onPress: () => {} },
-    { key: "buscar",      label: "Buscar",               icon: "search-outline",          onPress: () => {} },
-    { key: "faq",         label: "Perguntas frequentes", icon: "help-circle-outline",     onPress: () => {} },
+  const drawerNav = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+  const goTab = (tab: keyof TabParamList) => () => {
+    setMenuOpen(false);
+    drawerNav.navigate("HomeTabs", { screen: tab });
+  };
+
+  const items: { key: string; label: string; icon: IconName; onPress: () => void }[] = [
+    { key: "home",        label: "Home",                 icon: "home-outline",        onPress: goTab("Inicio") },
+    { key: "perfil",      label: "Perfil",               icon: "person-outline",      onPress: goTab("Perfil") },
+    { key: "aprendizado", label: "Aprendizado",          icon: "book-outline",        onPress: goTab("Aprendizado") },
+    { key: "buscar",      label: "Buscar",               icon: "search-outline",      onPress: goTab("Buscar") },
+    { key: "faq",         label: "Perguntas frequentes", icon: "help-circle-outline", onPress: () => {} },
   ];
 
   return (
@@ -71,9 +94,7 @@ export default function RootTabs() {
               setMenuOpen(true);
             },
           }}
-          options={{
-            tabBarLabel: "Menu",
-          }}
+          options={{ tabBarLabel: "Menu" }}
         />
       </Tab.Navigator>
 
@@ -87,17 +108,12 @@ export default function RootTabs() {
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <Text style={styles.sheetTitle}>Menu</Text>
+
           <View style={styles.list}>
             {items.map((item, idx) => (
               <View key={item.key}>
-                <TouchableOpacity
-                  style={styles.row}
-                  onPress={() => {
-                    setMenuOpen(false);
-                    item.onPress?.();
-                  }}
-                >
-                  <Ionicons name={item.icon as any} size={22} style={styles.rowIcon} />
+                <TouchableOpacity style={styles.row} onPress={item.onPress}>
+                  <Ionicons name={item.icon} size={22} style={styles.rowIcon} />
                   <Text style={styles.rowLabel}>{item.label}</Text>
                 </TouchableOpacity>
                 {idx < items.length - 1 && <View style={styles.divider} />}
@@ -111,10 +127,7 @@ export default function RootTabs() {
 }
 
 const styles = StyleSheet.create({
-  backdrop: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.35)",
-  },
+  backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
   sheet: {
     backgroundColor: "#1f1f1f",
     borderTopLeftRadius: 16,
@@ -133,31 +146,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.4)",
     marginBottom: 8,
   },
-  sheetTitle: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 8,
-  },
-  list: {
-    backgroundColor: "transparent",
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingVertical: 14,
-  },
-  rowIcon: {
-    color: "rgba(255,255,255,0.9)",
-    width: 28,
-  },
-  rowLabel: {
-    color: "#fff",
-    fontSize: 16,
-    marginLeft: 6,
-  },
-  divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: "rgba(255,255,255,0.15)",
-  },
+  sheetTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 8 },
+  list: { backgroundColor: "transparent" },
+  row: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
+  rowIcon: { color: "rgba(255,255,255,0.9)", width: 28 },
+  rowLabel: { color: "#fff", fontSize: 16, marginLeft: 6 },
+  divider: { height: StyleSheet.hairlineWidth, backgroundColor: "rgba(255,255,255,0.15)" },
 });
