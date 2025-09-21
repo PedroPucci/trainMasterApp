@@ -1,4 +1,4 @@
-import React from "react";
+import "react-native-gesture-handler";
 import {
   NavigationContainer,
   DarkTheme as NavDark,
@@ -6,14 +6,42 @@ import {
   Theme as NavTheme,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { ThemeProvider, useAppTheme } from "./src/components/theme/ThemeProvider";
 import LoginScreen from "./src/screens/LoginScreen";
 import RecoverPasswordScreen from "./src/screens/RecoverPasswordScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import RootTabs from "./src/components/navigation/RootTabs";
+import 'react-native-reanimated'; 
 
 const Stack = createNativeStackNavigator();
+const Drawer = createDrawerNavigator();
+
+function DrawerNavigator() {
+  const { theme } = useAppTheme();
+
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+        drawerType: "front",
+        drawerActiveTintColor: theme.colors.primary,
+        drawerInactiveTintColor: theme.colors.text,
+        drawerStyle: {
+          backgroundColor: theme.colors.card,
+        },
+      }}
+      initialRouteName="HomeTabs"
+    >
+      <Drawer.Screen
+        name="HomeTabs"
+        component={RootTabs}
+        options={{ title: "Início" }}
+      />
+    </Drawer.Navigator>
+  );
+}
 
 function ThemedNavigation() {
   const { theme } = useAppTheme();
@@ -36,7 +64,7 @@ function ThemedNavigation() {
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator
-        initialRouteName="Tabs"
+        initialRouteName="App"
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: hardBg },
@@ -45,7 +73,7 @@ function ThemedNavigation() {
           headerTitleStyle: { fontWeight: "700" },
         }}
       >
-        <Stack.Screen name="Tabs" component={RootTabs} />
+        <Stack.Screen name="App" component={DrawerNavigator} />
         <Stack.Screen name="Entrar" component={LoginScreen} />
         <Stack.Screen name="Recover" component={RecoverPasswordScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />

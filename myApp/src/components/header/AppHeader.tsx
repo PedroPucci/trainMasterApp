@@ -1,7 +1,7 @@
 import { View, Text, Image, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation, NavigationProp, DrawerActions } from "@react-navigation/native";
 import { styles } from "../header/styles";
 import { useAppTheme } from "../theme/ThemeProvider";
 
@@ -10,6 +10,7 @@ type RootStackParamList = {
   Home: undefined;
   Recover: undefined;
   Tabs: undefined;
+  App: undefined;
 };
 
 type Props = {
@@ -29,6 +30,10 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
     } finally {
       navigation.reset({ index: 0, routes: [{ name: "Entrar" }] });
     }
+  };
+
+  const handleOpenDrawer = () => {
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const Avatar = avatarUri ? (
@@ -67,8 +72,22 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
     <View style={[styles.container, { paddingTop: insets.top + 6 }]}>
       <View style={styles.circleLg} />
       <View style={styles.circleSm} />
+      <View style={[styles.topRow, { flexDirection: "row", alignItems: "center" }]}>
+        <Pressable
+          onPress={handleOpenDrawer}
+          style={{
+            padding: 8,
+            borderRadius: 999,
+            borderWidth: 1,
+            borderColor: "rgba(255,255,255,0.5)",
+            backgroundColor: "transparent",
+          }}
+          accessibilityRole="button"
+          accessibilityLabel="Abrir menu"
+        >
+          <Ionicons name="menu" size={22} color="#ffffff" />
+        </Pressable>
 
-      <View style={styles.topRow}>
         <View style={{ marginLeft: "auto", flexDirection: "row", alignItems: "center" }}>
           <IconButton
             icon="sunny-outline"
