@@ -294,7 +294,7 @@ export default function ProfileScreen() {
 
   return (
     <View style={[s.container, { backgroundColor: hardBg }]}>
-      <AppHeader userName={form.name || "Usuário"} onLogout={() => console.log("Sair")} />
+      <AppHeader userName={form.name || "Usuário"} />
 
       <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : undefined} style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={s.body} keyboardShouldPersistTaps="handled">
@@ -389,7 +389,7 @@ export default function ProfileScreen() {
           </View>
 
           <TouchableOpacity
-            style={[s.btnPrimary, { backgroundColor: primary }, (loading || saving) && { opacity: 0.7 }]}
+            style={[s.btnPrimary, (loading || saving) && { opacity: 0.7 }]}
             onPress={onSubmit}
             activeOpacity={0.9}
             disabled={loading || saving}
