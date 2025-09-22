@@ -14,6 +14,7 @@ import RecoverPasswordScreen from "./src/screens/RecoverPasswordScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import RootTabs from "./src/components/navigation/RootTabs";
 import 'react-native-reanimated'; 
+import FaqScreen from "./src/screens/FaqScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -39,6 +40,8 @@ function DrawerNavigator() {
         component={RootTabs}
         options={{ title: "Início" }}
       />
+
+      <Drawer.Screen name="FaqScreen" component={FaqScreen} options={{ title: "Perguntas frequentes" }} />
     </Drawer.Navigator>
   );
 }
