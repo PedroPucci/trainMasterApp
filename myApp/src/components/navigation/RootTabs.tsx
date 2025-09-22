@@ -26,6 +26,7 @@ type TabParamList = {
 type DrawerParamList = {
   HomeTabs: NavigatorScreenParams<TabParamList>;
   Department: undefined;
+  FaqScreen: undefined;
 };
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
@@ -67,7 +68,7 @@ export default function RootTabs() {
     { key: "perfil",      label: "Perfil",               icon: "person-outline",      onPress: goTab("Perfil") },
     { key: "aprendizado", label: "Aprendizado",          icon: "book-outline",        onPress: goTab("Aprendizado") },
     { key: "buscar",      label: "Buscar",               icon: "search-outline",      onPress: goTab("Buscar") },
-    { key: "faq",         label: "Perguntas frequentes", icon: "help-circle-outline", onPress: () => {} },
+    { key: "faq",         label: "Perguntas frequentes", icon: "help-circle-outline", onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
   ];
 
   return (
