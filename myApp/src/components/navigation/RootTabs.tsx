@@ -27,6 +27,7 @@ type DrawerParamList = {
   HomeTabs: NavigatorScreenParams<TabParamList>;
   Department: undefined;
   FaqScreen: undefined;
+  ExamOverView: undefined;
 };
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
@@ -58,17 +59,19 @@ const Tab = createBottomTabNavigator<TabParamList>();
 export default function RootTabs() {
   const [menuOpen, setMenuOpen] = useState(false);
   const drawerNav = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+
   const goTab = (tab: keyof TabParamList) => () => {
     setMenuOpen(false);
     drawerNav.navigate("HomeTabs", { screen: tab });
   };
 
   const items: { key: string; label: string; icon: IconName; onPress: () => void }[] = [
-    { key: "home",        label: "Home",                 icon: "home-outline",        onPress: goTab("Inicio") },
-    { key: "perfil",      label: "Perfil",               icon: "person-outline",      onPress: goTab("Perfil") },
-    { key: "aprendizado", label: "Aprendizado",          icon: "book-outline",        onPress: goTab("Aprendizado") },
-    { key: "buscar",      label: "Buscar",               icon: "search-outline",      onPress: goTab("Buscar") },
-    { key: "faq",         label: "Perguntas frequentes", icon: "help-circle-outline", onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
+    { key: "home",        label: "Home",                   icon: "home-outline",            onPress: goTab("Inicio") },
+    { key: "perfil",      label: "Perfil",                 icon: "person-outline",          onPress: goTab("Perfil") },
+    { key: "aprendizado", label: "Aprendizado",            icon: "book-outline",            onPress: goTab("Aprendizado") },
+    { key: "buscar",      label: "Buscar",                 icon: "search-outline",          onPress: goTab("Buscar") },
+    { key: "faq",         label: "Perguntas frequentes",   icon: "help-circle-outline",     onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
+    { key: "exam",        label: "Provas",     icon: "reader-outline",          onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
   ];
 
   return (
