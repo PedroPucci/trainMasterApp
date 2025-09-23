@@ -15,6 +15,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import RootTabs from "./src/components/navigation/RootTabs";
 import 'react-native-reanimated'; 
 import FaqScreen from "./src/screens/FaqScreen";
+import ExamOverView from "./src/screens/ExamOverView";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -39,6 +40,12 @@ function DrawerNavigator() {
         name="HomeTabs"
         component={RootTabs}
         options={{ title: "Início" }}
+      />
+
+      <Drawer.Screen
+        name="ExamOverView"
+        component={ExamOverView}
+        options={{ title: "Provas" }}
       />
 
       <Drawer.Screen name="FaqScreen" component={FaqScreen} options={{ title: "Perguntas frequentes" }} />
