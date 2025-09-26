@@ -1,0 +1,92 @@
+import React from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
+
+type Course = {
+  id: string;
+  title: string;
+  author: string;
+  dateISO: string;      // ex: "2021-10-20"
+  description: string;
+  thumbnailUrl?: string;
+  duration?: string;    // ex: "20:20"
+};
+
+type Props = { item: Course };
+
+export default function CourseCard({ item }: Props) {
+  const dateBR = new Date(item.dateISO).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric"
+  });
+
+  return (
+    <View style={s.card}>
+      <Text style={s.title}>{item.title}</Text>
+      <Text style={s.date}>{dateBR}</Text>
+
+      <View style={s.row}>
+        <View style={s.thumbWrapper}>
+          <Image
+            source={{ uri: item.thumbnailUrl || "https://placehold.co/280x160" }}
+            style={s.thumb}
+            resizeMode="cover"
+          />
+          {item.duration ? (
+            <View style={s.durationPill}>
+              <Text style={s.durationText}>{item.duration}</Text>
+            </View>
+          ) : null}
+        </View>
+
+        <View style={s.info}>
+          <Text style={s.author}>{item.author}</Text>
+          <Text numberOfLines={3} style={s.desc}>
+            {item.description}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+const s = StyleSheet.create({
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 16,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 2
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#1f2937"
+  },
+  date: {
+    marginTop: 2,
+    fontSize: 12,
+    color: "#9ca3af"
+  },
+  row: { flexDirection: "row", gap: 12, marginTop: 12 },
+  thumbWrapper: { width: 140, height: 80, borderRadius: 8, overflow: "hidden" },
+  thumb: { width: "100%", height: "100%" },
+  durationPill: {
+    position: "absolute",
+    right: 8,
+    bottom: 8,
+    backgroundColor: "rgba(0,0,0,0.8)",
+    borderRadius: 6,
+    paddingHorizontal: 6,
+    paddingVertical: 2
+  },
+  durationText: { color: "#fff", fontSize: 12, fontWeight: "700" },
+  info: { flex: 1, justifyContent: "center" },
+  author: { fontSize: 12, color: "#000000", marginBottom: 4 , fontWeight: "400"},
+  desc: { fontSize: 13, color: "#000000",fontWeight: "600" }
+});
