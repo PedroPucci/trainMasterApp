@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   View, Text, TextInput, TouchableOpacity,
-  KeyboardAvoidingView, Platform, Image, ScrollView, StatusBar, Alert
+  KeyboardAvoidingView, Platform, ScrollView, StatusBar, Alert
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { styles as s } from "./styles";
@@ -77,12 +77,6 @@ export default function LoginScreen({ navigation }: any) {
         <Text style={s.subtitle}>
           Digite suas credenciais para{"\n"}acessar sua conta:
         </Text>
-
-        <Image
-          source={require("../../assets/images/logo6.png")}
-          style={s.logo}
-          resizeMode="contain"
-        />
 
         <View style={s.inputWrap}>
           <TextInput

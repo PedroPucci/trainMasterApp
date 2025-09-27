@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Image,
   ScrollView,
   ActivityIndicator,
   Alert,
@@ -135,12 +134,6 @@ export default function RegisterScreen({ navigation }: any) {
       <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
         <Text style={s.title}>Criar conta</Text>
         <Text style={s.subtitle}>Digite as informações abaixo:</Text>
-
-        <Image
-          source={require("../../assets/images/logo6.png")}
-          style={[s.logo]}
-          resizeMode="contain"
-        />
 
         <View style={[s.inputWrap, errors.cpf && s.inputError]}>
           <TextInput

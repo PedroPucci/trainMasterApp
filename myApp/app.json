@@ -7,27 +7,26 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#F0F4F3"
-    },
-
     "ios": {
       "supportsTablet": true
     },
-
     "android": {
       "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "backgroundColor": "#F0F4F3"
-      }
+      },
+      "package": "com.pedroighor.myApp"
     },
-
     "web": {
       "bundler": "metro"
     },
-
-    "assetBundlePatterns": ["**/*"]
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4258d8ab-4876-41c0-a8e5-03c01f8fd701"
+      }
+    }
   }
 }

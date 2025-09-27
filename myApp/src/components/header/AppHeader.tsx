@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -31,14 +31,6 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
       navigation.reset({ index: 0, routes: [{ name: "Entrar" }] });
     }
   };
-
-  const Avatar = avatarUri ? (
-    <Image source={{ uri: avatarUri }} style={styles.avatar} />
-  ) : (
-    <View style={styles.avatarPlaceholder}>
-      <Ionicons name="person" size={34} color="#ffffff" />
-    </View>
-  );
 
   const IconButton = ({
     active,

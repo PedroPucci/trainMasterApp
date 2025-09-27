@@ -1,8 +1,7 @@
 import { useState } from "react";
 import {
   View, Text, TextInput, TouchableOpacity,
-  KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
-  Image, ScrollView, StatusBar, Pressable 
+  KeyboardAvoidingView, Platform, Alert, ActivityIndicator, ScrollView, StatusBar, Pressable 
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { routes } from "../components/routes/routes";
@@ -124,8 +123,6 @@ export default function RecoverPasswordScreen({ navigation }: any) {
       <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
         <Text style={s.title}>Recupere sua senha</Text>
         <Text style={s.subtitle}>Digite a informação abaixo:</Text>
-
-        <Image source={require("../../assets/images/logo6.png")} style={s.logo} resizeMode="contain" />
 
         <View style={[s.inputWrap, errors.email && s.inputError]}>
           <TextInput
