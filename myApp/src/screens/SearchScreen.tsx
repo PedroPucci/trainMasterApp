@@ -5,6 +5,7 @@ import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAppTheme } from "../components/theme/ThemeProvider";
 import CourseCard from "../components/CourseCard/CourseCard";
+import TrendingChips, { ChipItem } from "../components/TrendingChips/TrendingChips";
 
 export type Course = {
   id: string;
@@ -19,12 +20,13 @@ export type Course = {
 export default function SearchScreen() {
   const today = new Date().toISOString().slice(0, 10);
   const [selected, setSelected] = React.useState<string>(today);
+  const [selectedChip, setSelectedChip] = React.useState<string | null>(null);
   const { theme } = useAppTheme();
   const isDark = theme.name === "dark";
   const hardBg = isDark ? "#000000" : "#FFFFFF";
   const hardText = isDark ? "#FFFFFF" : "#000000";
   const hardMuted = isDark ? "#A3A3A3" : "#666666";
-  const hardBorder = isDark ? "#222222" : "#E5E5E5";
+  const hardBorder = isDark ? "#FFFFFF 0px 0px 1px" : "#000000 0px 0px 0px";
   const primary = theme.colors.primary;
 
   const [q, setQ] = React.useState("");
@@ -81,6 +83,13 @@ export default function SearchScreen() {
     }
   ]
 
+  const TOP_SEARCHES: ChipItem[] = [
+    { id: "java", label: "Java" },
+    { id: "pm", label: "Gerência de projeto" },
+    { id: "csharp", label: "C#" },
+    { id: "uiux", label: "UI/UX" }
+  ];
+
   const load = React.useCallback(async (query?: string) => {
     setError(null);
     setLoading(true);
@@ -116,19 +125,32 @@ export default function SearchScreen() {
   return (
     <View style={[ss.container, { backgroundColor: hardBg }]}>
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
-
+    
       <View style={ss.content}>
-        <View style={ss.searchBox}>
-          <Text style={ss.searchIcon}><Ionicons name="search" size={32} color="black" /></Text>
+        <View style={[ss.searchBox, { backgroundColor: hardBg, boxShadow:hardBorder }]}>
+          <Text style={[ss.searchIcon, { color: hardBg }]}><Ionicons name="search" size={24} color="#6b7280" /></Text>
           <TextInput
             placeholder="Pesquisar cursos"
-            placeholderTextColor="#000000"
+            placeholderTextColor= {hardText}
             value={q}
-            onChangeText={setQ}
-            style={ss.searchInput}
+            onChangeText={(text) => {
+              setQ(text);
+              setSelectedChip(null); // digitou manual, limpa chip ativo
+            }}
+            style={[ss.searchInput, { color: hardText }]}
             returnKeyType="search"
           />
         </View>
+
+        <TrendingChips
+          items={TOP_SEARCHES}
+          selectedId={selectedChip}
+          onPress={(item) => {
+            setSelectedChip(item.id);
+            setQ(item.label);     // preencher input e acionar debounce existente
+          }}
+        />
+
         {loading ? (
           <View style={ss.loader}>
             <ActivityIndicator size="large" />
@@ -143,7 +165,7 @@ export default function SearchScreen() {
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             ListEmptyComponent={EmptyState}
-            contentContainerStyle={data.length === 0 ? { flexGrow: 1, marginTop: 12 } : { flexGrow: 1, marginTop: 24 , marginBottom: 100 } }
+            contentContainerStyle={data.length === 0 ? { flexGrow: 1, marginTop: 12 } : { flexGrow: 1, marginTop: 24, marginBottom: 100 }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import { useAppTheme } from "../theme/ThemeProvider";
 
 type Course = {
   id: string;
@@ -20,9 +21,16 @@ export default function CourseCard({ item }: Props) {
     year: "numeric"
   });
 
+    const { theme } = useAppTheme();
+    const isDark = theme.name === "dark";
+    const hardBg = isDark ? "#000000" : "#FFFFFF";
+    const hardText = isDark ? "#FFFFFF" : "#000000";
+    const hardMuted = isDark ? "#A3A3A3" : "#666666";
+    const hardBorder = isDark ? "white 1px" : "#000000";
+
   return (
-    <View style={s.card}>
-      <Text style={s.title}>{item.title}</Text>
+    <View style={[s.card, { backgroundColor: hardBg}]}>
+      <Text style={[s.title, { color: hardText}]}>{item.title}</Text>
       <Text style={s.date}>{dateBR}</Text>
 
       <View style={s.row}>
@@ -40,8 +48,8 @@ export default function CourseCard({ item }: Props) {
         </View>
 
         <View style={s.info}>
-          <Text style={s.author}>{item.author}</Text>
-          <Text numberOfLines={3} style={s.desc}>
+          <Text style={[s.author, { color: hardText}]}>{item.author}</Text>
+          <Text numberOfLines={3} style={[s.desc, { color: hardText}]}>
             {item.description}
           </Text>
         </View>
@@ -61,7 +69,10 @@ const s = StyleSheet.create({
     shadowOpacity: 0.06,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 2
+    elevation: 2,
+    borderStyle: "solid",
+    borderColor: "white",
+    borderWidth: 1
   },
   title: {
     fontSize: 18,
