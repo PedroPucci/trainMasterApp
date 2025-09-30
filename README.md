@@ -44,13 +44,18 @@
 
 ### **Estrutura do Projeto**
 Essa estrutura garante organização das pastas.
-## **Components**
+## **Assets**
+- **Imagens**: Imagens do projeto.
+## **Src**
 Contém os endpoints para acesso e execução das funcionalidades:
 1. Organização das pastas:
-- **Components**: Possui todas as pastas de todas as telas.
-- **Footer**: Composta pelo arquivo tsx e ts do footer.
-- **Header**: Composta pelo arquivo tsx e ts do Header.
-- **Navigation**: Composta pelo arquivo tsx e ts do Navigation.
+- **Components**: Possui todas as pastas dos componentes do projeto.
+1. Footer: Pasta formada pelo arquivo tsx e css do componente.
+2. Header: Pasta formada pelo arquivo tsx e css do componente.
+3. Navigation: Pasta formada pelos arquivos de navegação entre as telas.
+4. Routes: Pasta formada pelos arquivos de conexão/endpoint com a API.
+5. Theme: Pasta formada pelo arquivo tsx e css do componente de temas dos componentes.
+6. Utils: Pasta formada pela classe validação de campos e arquivo de máscara.
 - **Screens**: Composta pelo arquivo tsx e ts de todas as telas.
-## **Assets**
-- **Assets**: Imagens do projeto.
+- **Theme**: Pasta formada pelo arquivo tsx do componente para escurecer/clarear a tela.
+
