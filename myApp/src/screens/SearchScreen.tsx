@@ -1,33 +1,32 @@
 import * as React from "react";
-import { View, Text, ScrollView, StyleSheet, TextInput, ActivityIndicator, FlatList, RefreshControl } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import AppHeader from "../components/header/AppHeader";
 import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAppTheme } from "../components/theme/ThemeProvider";
 import CourseCard from "../components/CourseCard/CourseCard";
-import TrendingChips, { ChipItem } from "../components/TrendingChips/TrendingChips";
+import TrendingChips, {
+  ChipItem,
+} from "../components/TrendingChips/TrendingChips";
+import { Course,coursesService } from "../services";
 
-export type Course = {
-  id: string;
-  title: string;
-  author: string;
-  dateISO: string;      // ex: "2021-10-20"
-  description: string;
-  thumbnailUrl?: string;
-  duration?: string;    // ex: "20:20"
-};
 
 export default function SearchScreen() {
-  const today = new Date().toISOString().slice(0, 10);
-  const [selected, setSelected] = React.useState<string>(today);
   const [selectedChip, setSelectedChip] = React.useState<string | null>(null);
   const { theme } = useAppTheme();
   const isDark = theme.name === "dark";
   const hardBg = isDark ? "#000000" : "#FFFFFF";
   const hardText = isDark ? "#FFFFFF" : "#000000";
-  const hardMuted = isDark ? "#A3A3A3" : "#666666";
   const hardBorder = isDark ? "#FFFFFF 0px 0px 1px" : "#000000 0px 0px 0px";
-  const primary = theme.colors.primary;
+
 
   const [q, setQ] = React.useState("");
   const [data, setData] = React.useState<Course[]>([]);
@@ -35,103 +34,80 @@ export default function SearchScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  const MOCK_courses = [
-    {
-      id: "1",
-      title: "Fundamentos Web",
-      author: "Rodrigo Branas",
-      dateISO: "2025-10-01",
-      description: "Venha aprender sobre os conceitos básicos da Web",
-      thumbnailUrl: "https://placehold.co/280x160?text=thumb",
-      duration: "20:20"
-    },
-    {
-      id: "2",
-      title: "Curso avançado de React",
-      author: "Rodrigo Branas",
-      dateISO: "2025-10-01",
-      description: "Aprenda conceitos avançados de React",
-      thumbnailUrl: "https://placehold.co/280x160?text=thumb",
-      duration: "20:20"
-    },
-    {
-      id: "3",
-      title: "Fundamentos de Javascript",
-      author: "Rodrigo Branas",
-      dateISO: "2025-10-01",
-      description: "Venha aprender sobre os conceitos básicos de Javacript",
-      thumbnailUrl: "https://placehold.co/280x160?text=thumb",
-      duration: "20:20"
-    },
-    {
-      id: "4",
-      title: "Fundamentos Banco de dados",
-      author: "Rodrigo Branas",
-      dateISO: "2025-10-01",
-      description: "Venha aprender sobre os conceitos básicos de SQL",
-      thumbnailUrl: "https://placehold.co/280x160?text=thumb",
-      duration: "20:20"
-    },
-    {
-      id: "5",
-      title: "Fundamentos de Testes",
-      author: "Rodrigo Branas",
-      dateISO: "2025-10-01",
-      description: "Venha aprender sobre os conceitos básicos de testes",
-      thumbnailUrl: "https://placehold.co/280x160?text=thumb",
-      duration: "20:20"
-    },
-  ]
-
   const TOP_SEARCHES: ChipItem[] = [
     { id: "java", label: "Java" },
     { id: "pm", label: "Gerência de projeto" },
     { id: "csharp", label: "C#" },
-    { id: "uiux", label: "UI/UX" }
+    { id: "uiux", label: "UI/UX" },
   ];
 
   const load = React.useCallback(async (query?: string) => {
     setError(null);
     setLoading(true);
+
+    // AbortController (evita race em buscas rápidas)
+    const controller = new AbortController();
     try {
-      const res = null; //await fetchCourses(query);
-      setData(MOCK_courses);
+      const items = query?.trim()
+        ? await coursesService.getBySearch(query)
+        : await coursesService.getAll();
+
+      setData(items);
     } catch (e: any) {
-      setError("Falha ao carregar cursos.");
+      if (e?.name !== "CanceledError" && e?.message !== "canceled") {
+        setError(e?.message || "Falha ao carregar cursos.");
+        setData([]); // ou mantenha o último resultado
+      }
     } finally {
       setLoading(false);
     }
+
+    // return para permitir cancelamento externo (debounce effect)
+    return () => controller.abort();
   }, []);
 
-  React.useEffect(() => { load(); }, [load]);
+  React.useEffect(() => {
+    load();
+  }, [load]);
   // debounce simples de 350ms para busca
   React.useEffect(() => {
     const t = setTimeout(() => load(q), 350);
     return () => clearTimeout(t);
   }, [q, load]);
 
-  const renderItem = React.useCallback(({ item }: { item: Course }) => (
-    <CourseCard item={item} />
-  ), []);
+  const renderItem = React.useCallback(
+    ({ item }: { item: Course }) => <CourseCard item={item} />,
+    []
+  );
 
   const keyExtractor = React.useCallback((item: Course) => item.id, []);
 
-  const EmptyState = React.useMemo(() => (
-    <View style={ss.empty}>
-      <Text style={ss.emptyText}>Não existem cursos cadastrados</Text>
-    </View>
-  ), []);
+  const EmptyState = React.useMemo(
+    () => (
+      <View style={ss.empty}>
+        <Text style={ss.emptyText}>Não existem cursos cadastrados</Text>
+      </View>
+    ),
+    []
+  );
 
   return (
     <View style={[ss.container, { backgroundColor: hardBg }]}>
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
-    
+
       <View style={ss.content}>
-        <View style={[ss.searchBox, { backgroundColor: hardBg, boxShadow:hardBorder }]}>
-          <Text style={[ss.searchIcon, { color: hardBg }]}><Ionicons name="search" size={24} color="#6b7280" /></Text>
+        <View
+          style={[
+            ss.searchBox,
+            { backgroundColor: hardBg, boxShadow: hardBorder },
+          ]}
+        >
+          <Text style={[ss.searchIcon, { color: hardBg }]}>
+            <Ionicons name="search" size={24} color="#6b7280" />
+          </Text>
           <TextInput
             placeholder="Pesquisar cursos"
-            placeholderTextColor= {hardText}
+            placeholderTextColor={hardText}
             value={q}
             onChangeText={(text) => {
               setQ(text);
@@ -147,7 +123,7 @@ export default function SearchScreen() {
           selectedId={selectedChip}
           onPress={(item) => {
             setSelectedChip(item.id);
-            setQ(item.label);     // preencher input e acionar debounce existente
+            setQ(item.label); // preencher input e acionar debounce existente
           }}
         />
 
@@ -165,7 +141,11 @@ export default function SearchScreen() {
             renderItem={renderItem}
             keyExtractor={keyExtractor}
             ListEmptyComponent={EmptyState}
-            contentContainerStyle={data.length === 0 ? { flexGrow: 1, marginTop: 12 } : { flexGrow: 1, marginTop: 24, marginBottom: 100 }}
+            contentContainerStyle={
+              data.length === 0
+                ? { flexGrow: 1, marginTop: 12 }
+                : { flexGrow: 1, marginTop: 24, marginBottom: 100 }
+            }
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}
@@ -200,7 +180,7 @@ const ss = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
-    elevation: 1
+    elevation: 1,
   },
   searchIcon: { fontSize: 16, marginRight: 8 },
   searchInput: { flex: 1, fontSize: 14, color: "#111827" },
@@ -209,8 +189,8 @@ const ss = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 0
+    paddingHorizontal: 0,
   },
   emptyText: { color: "#000000", fontSize: 14 },
-  errorText: { color: "#ef4444", fontSize: 14 }
+  errorText: { color: "#ef4444", fontSize: 14 },
 });
