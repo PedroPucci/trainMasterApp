@@ -40,47 +40,47 @@ export default function SearchScreen() {
       id: "1",
       title: "Fundamentos Web",
       author: "Rodrigo Branas",
-      dateISO: "2021-10-20",
+      dateISO: "2025-10-01",
       description: "Venha aprender sobre os conceitos básicos da Web",
       thumbnailUrl: "https://placehold.co/280x160?text=thumb",
       duration: "20:20"
     },
     {
       id: "2",
-      title: "Fundamentos Web",
+      title: "Curso avançado de React",
       author: "Rodrigo Branas",
-      dateISO: "2021-10-20",
-      description: "Venha aprender sobre os conceitos básicos da Web",
+      dateISO: "2025-10-01",
+      description: "Aprenda conceitos avançados de React",
       thumbnailUrl: "https://placehold.co/280x160?text=thumb",
       duration: "20:20"
     },
     {
       id: "3",
-      title: "Fundamentos Web",
+      title: "Fundamentos de Javascript",
       author: "Rodrigo Branas",
-      dateISO: "2021-10-20",
-      description: "Venha aprender sobre os conceitos básicos da Web",
+      dateISO: "2025-10-01",
+      description: "Venha aprender sobre os conceitos básicos de Javacript",
       thumbnailUrl: "https://placehold.co/280x160?text=thumb",
       duration: "20:20"
     },
     {
       id: "4",
-      title: "Fundamentos Web",
+      title: "Fundamentos Banco de dados",
       author: "Rodrigo Branas",
-      dateISO: "2021-10-20",
-      description: "Venha aprender sobre os conceitos básicos da Web",
+      dateISO: "2025-10-01",
+      description: "Venha aprender sobre os conceitos básicos de SQL",
       thumbnailUrl: "https://placehold.co/280x160?text=thumb",
       duration: "20:20"
     },
     {
       id: "5",
-      title: "Fundamentos Web",
+      title: "Fundamentos de Testes",
       author: "Rodrigo Branas",
-      dateISO: "2021-10-20",
-      description: "Venha aprender sobre os conceitos básicos da Web",
+      dateISO: "2025-10-01",
+      description: "Venha aprender sobre os conceitos básicos de testes",
       thumbnailUrl: "https://placehold.co/280x160?text=thumb",
       duration: "20:20"
-    }
+    },
   ]
 
   const TOP_SEARCHES: ChipItem[] = [
