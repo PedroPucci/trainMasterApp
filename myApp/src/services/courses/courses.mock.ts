@@ -2,7 +2,7 @@ import type { Course } from "../types";
 
 // Mock básico; você pode evoluir para JSON separado.
 export const COURSES_MOCK: Course[] = [
-    // Java
+  // Java
   {
     id: "1",
     title: "Fundamentos de Java",
@@ -11,6 +11,7 @@ export const COURSES_MOCK: Course[] = [
     description: "Aprenda os conceitos básicos da linguagem Java e sua aplicação em projetos reais.",
     thumbnailUrl: "https://placehold.co/280x160?text=Java",
     duration: "15:30",
+    progressPercentage: 100
   },
   {
     id: "2",
@@ -20,6 +21,7 @@ export const COURSES_MOCK: Course[] = [
     description: "Aprofunde-se em tópicos avançados de Java, incluindo Streams, Lambdas e Spring Boot.",
     thumbnailUrl: "https://placehold.co/280x160?text=Java+Avançado",
     duration: "22:10",
+    progressPercentage: 0
   },
 
   // Gerência de projeto
@@ -31,6 +33,7 @@ export const COURSES_MOCK: Course[] = [
     description: "Conceitos fundamentais de gestão de projetos, metodologias tradicionais e ágeis.",
     thumbnailUrl: "https://placehold.co/280x160?text=PM",
     duration: "18:45",
+    progressPercentage: 50
   },
   {
     id: "4",
@@ -91,5 +94,11 @@ export function mockFilterBySearch(q?: string) {
       c.title.toLowerCase().includes(s) ||
       c.author.toLowerCase().includes(s) ||
       c.description.toLowerCase().includes(s)
+  );
+}
+
+export function mockGetEnrolledCourses() {
+  return COURSES_MOCK.filter(
+    (c) => typeof c.progressPercentage === "number"
   );
 }

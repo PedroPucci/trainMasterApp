@@ -15,6 +15,7 @@ import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
 import SearchScreen from "../../screens/SearchScreen";
+import EnrolledCoursesScreen from "../../screens/EnrolledCoursesScreen";
 
 type TabParamList = {
   Inicio: undefined;
@@ -33,13 +34,7 @@ type DrawerParamList = {
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
-function AprendizadoScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Aprendizado</Text>
-    </View>
-  );
-}
+
 
 function MenuScreen() {
   return (
@@ -80,7 +75,7 @@ export default function RootTabs() {
         <Tab.Screen name="Perfil" component={ProfileScreen} />
         <Tab.Screen
           name="Aprendizado"
-          component={AprendizadoScreen}
+          component={EnrolledCoursesScreen}
           options={{ tabBarLabel: "Aprendizado" }}
         />
         <Tab.Screen name="Buscar" component={SearchScreen} />

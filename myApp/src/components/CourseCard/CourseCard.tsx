@@ -1,16 +1,8 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { useAppTheme } from "../theme/ThemeProvider";
+import { Course } from "../../services";
 
-type Course = {
-  id: string;
-  title: string;
-  author: string;
-  dateISO: string;      // ex: "2021-10-20"
-  description: string;
-  thumbnailUrl?: string;
-  duration?: string;    // ex: "20:20"
-};
 
 type Props = { item: Course };
 
@@ -21,16 +13,39 @@ export default function CourseCard({ item }: Props) {
     year: "numeric"
   });
 
-    const { theme } = useAppTheme();
-    const isDark = theme.name === "dark";
-    const hardBg = isDark ? "#000000" : "#FFFFFF";
-    const hardText = isDark ? "#FFFFFF" : "#000000";
-    const hardMuted = isDark ? "#A3A3A3" : "#666666";
-    const hardBorder = isDark ? "white 1px" : "#000000";
+    const formatCourseProgress = (progress?: number | null): string | null => {
+    // Se o valor for null, undefined ou não for número
+    if (progress === null || progress === undefined || isNaN(progress)) {
+      return null;
+    }
+
+    // Garante que o valor fique entre 0 e 100
+    const safeProgress = Math.min(Math.max(progress, 0), 100);
+
+    if (safeProgress === 0) {
+      return "Iniciar Curso";
+    }
+
+    if (safeProgress === 100) {
+      return "Concluído";
+    }
+
+    return `${safeProgress}%`;
+  }
+
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
+  const hardMuted = isDark ? "#A3A3A3" : "#666666";
+  const hardBorder = isDark ? "white 1px" : "#000000";
+  const progressTxt = formatCourseProgress(item.progressPercentage);
+
+
 
   return (
-    <View style={[s.card, { backgroundColor: hardBg}]}>
-      <Text style={[s.title, { color: hardText}]}>{item.title}</Text>
+    <View style={[s.card, { backgroundColor: hardBg }]}>
+      <Text style={[s.title, { color: hardText }]}>{item.title}</Text>
       <Text style={s.date}>{dateBR}</Text>
 
       <View style={s.row}>
@@ -48,12 +63,13 @@ export default function CourseCard({ item }: Props) {
         </View>
 
         <View style={s.info}>
-          <Text style={[s.author, { color: hardText}]}>{item.author}</Text>
-          <Text numberOfLines={3} style={[s.desc, { color: hardText}]}>
+          <Text style={[s.author, { color: hardText }]}>{item.author}</Text>
+          <Text numberOfLines={3} style={[s.desc, { color: hardText }]}>
             {item.description}
           </Text>
         </View>
       </View>
+      <Text style={[s.progress, { color: hardText }]}>{progressTxt}</Text>
     </View>
   );
 }
@@ -98,6 +114,7 @@ const s = StyleSheet.create({
   },
   durationText: { color: "#fff", fontSize: 12, fontWeight: "700" },
   info: { flex: 1, justifyContent: "center" },
-  author: { fontSize: 12, color: "#000000", marginBottom: 4 , fontWeight: "400"},
-  desc: { fontSize: 13, color: "#000000",fontWeight: "600" }
+  author: { fontSize: 12, color: "#000000", marginBottom: 4, fontWeight: "400" },
+  progress: { fontSize: 14, color: "#000000", marginBottom: 0, marginTop: 8, fontWeight: "400" },
+  desc: { fontSize: 13, color: "#000000", fontWeight: "600" }
 });
