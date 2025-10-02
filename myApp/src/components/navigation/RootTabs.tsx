@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
+import SearchScreen from "../../screens/SearchScreen";
 
 type TabParamList = {
   Inicio: undefined;
@@ -39,13 +40,7 @@ function AprendizadoScreen() {
     </View>
   );
 }
-function BuscarScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Buscar</Text>
-    </View>
-  );
-}
+
 function MenuScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -89,7 +84,7 @@ export default function RootTabs() {
           component={AprendizadoScreen}
           options={{ tabBarLabel: "Aprendizado" }}
         />
-        <Tab.Screen name="Buscar" component={BuscarScreen} />
+        <Tab.Screen name="Buscar" component={SearchScreen} />
         <Tab.Screen
           name="Menu"
           component={MenuScreen}
