@@ -14,6 +14,8 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
+import SearchScreen from "../../screens/SearchScreen";
+import EnrolledCoursesScreen from "../../screens/EnrolledCoursesScreen";
 
 type TabParamList = {
   Inicio: undefined;
@@ -32,20 +34,8 @@ type DrawerParamList = {
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
-function AprendizadoScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Aprendizado</Text>
-    </View>
-  );
-}
-function BuscarScreen() {
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Text>Buscar</Text>
-    </View>
-  );
-}
+
+
 function MenuScreen() {
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -72,6 +62,7 @@ export default function RootTabs() {
     { key: "buscar",      label: "Buscar",                 icon: "search-outline",          onPress: goTab("Buscar") },
     { key: "faq",         label: "Perguntas frequentes",   icon: "help-circle-outline",     onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
     { key: "exam",        label: "Provas",     icon: "reader-outline",          onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
+    { key: "departamento",  label: "Departamento",              icon: "business-outline",       onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); } },
   ];
 
   return (
@@ -85,10 +76,10 @@ export default function RootTabs() {
         <Tab.Screen name="Perfil" component={ProfileScreen} />
         <Tab.Screen
           name="Aprendizado"
-          component={AprendizadoScreen}
+          component={EnrolledCoursesScreen}
           options={{ tabBarLabel: "Aprendizado" }}
         />
-        <Tab.Screen name="Buscar" component={BuscarScreen} />
+        <Tab.Screen name="Buscar" component={SearchScreen} />
         <Tab.Screen
           name="Menu"
           component={MenuScreen}
