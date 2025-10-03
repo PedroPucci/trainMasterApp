@@ -3,6 +3,7 @@ import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AppHeader from "../components/header/AppHeader";
 import type { CourseDetail, ModuleBlock, Lesson } from "../services";
+import { useAppTheme } from "../components/theme/ThemeProvider";
 
 // MOCK rápido (pode vir do seu service depois)
 const MOCK: CourseDetail = {
@@ -45,17 +46,21 @@ const MOCK: CourseDetail = {
 
 export default function CourseDetailScreen() {
   const course = MOCK;
-
+    const { theme } = useAppTheme();
+    const isDark = theme.name === "dark";
+    const hardBg = isDark ? "#000000" : "#FFFFFF";
+    const hardText = isDark ? "#FFFFFF" : "#000000";
+    
   return (
-    <View style={{ flex: 1, backgroundColor: "#EFF4F3" }}>
+    <View style={{ flex: 1, backgroundColor: hardBg }}>
       <AppHeader userName="Lydia" onLogout={() => {}} />
 
       <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
         {/* Título */}
-        <Text style={s.title}>{course.title}</Text>
+        <Text style={[s.title, { color: hardText }]}>{course.title}</Text>
 
         {/* Prova */}
-        <Text style={s.sectionTitle}>Prova</Text>
+        <Text style={[s.sectionTitle, { color: hardText }]}>Prova</Text>
         <View style={s.card}>
           <Text style={s.cardTitle}>{course.exam.title}</Text>
 
@@ -69,8 +74,8 @@ export default function CourseDetailScreen() {
         </View>
 
         {/* Exercícios */}
-        <Text style={[s.sectionTitle, { marginTop: 16 }]}>Exercícios</Text>
-        <Text style={s.subtitle}>
+        <Text style={[s.sectionTitle, { marginTop: 16,color: hardText }]}>Exercícios</Text>
+        <Text style={[s.subtitle, { color: hardText }]}>
           {course.completedModules} de {course.totalModules} módulos concluídos
         </Text>
 
@@ -154,7 +159,6 @@ const s = StyleSheet.create({
   },
   cardSeparated: {
     borderTopWidth: 0,
-    borderTopColor: "#e9d8fd", // lilás claro
     marginTop: 12,
   },
   cardTitle: {
