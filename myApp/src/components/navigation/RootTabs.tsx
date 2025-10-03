@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Modal,
-  Pressable,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, Modal, Pressable, TouchableOpacity, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation, NavigatorScreenParams } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -16,6 +9,8 @@ import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
 import SearchScreen from "../../screens/SearchScreen";
 import EnrolledCoursesScreen from "../../screens/EnrolledCoursesScreen";
+import CourseDetailScreen from "../../screens/CourseDetailScreen"; // 👈 importa a tela de detalhes
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 type TabParamList = {
   Inicio: undefined;
@@ -34,7 +29,35 @@ type DrawerParamList = {
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
 
+/* 👇 Cria um stack só para a aba de Aprendizado */
+const AprendizadoStackNav = createNativeStackNavigator();
 
+function AprendizadoStack() {
+  return (
+    <AprendizadoStackNav.Navigator screenOptions={{ headerShown: false }}>
+      <AprendizadoStackNav.Screen
+        name="AprendizadoHome"
+        component={EnrolledCoursesScreen}
+      />
+      <AprendizadoStackNav.Screen
+        name="CourseDetail"
+        component={CourseDetailScreen}
+      />
+    </AprendizadoStackNav.Navigator>
+  );
+}
+
+/* 👇 Pode fazer o mesmo se quiser para a aba Buscar */
+const BuscarStackNav = createNativeStackNavigator();
+
+function BuscarStack() {
+  return (
+    <BuscarStackNav.Navigator screenOptions={{ headerShown: false }}>
+      <BuscarStackNav.Screen name="BuscarHome" component={SearchScreen} />
+      <BuscarStackNav.Screen name="CourseDetail" component={CourseDetailScreen} />
+    </BuscarStackNav.Navigator>
+  );
+}
 
 function MenuScreen() {
   return (
@@ -56,13 +79,13 @@ export default function RootTabs() {
   };
 
   const items: { key: string; label: string; icon: IconName; onPress: () => void }[] = [
-    { key: "home",        label: "Home",                   icon: "home-outline",            onPress: goTab("Inicio") },
-    { key: "perfil",      label: "Perfil",                 icon: "person-outline",          onPress: goTab("Perfil") },
-    { key: "aprendizado", label: "Aprendizado",            icon: "book-outline",            onPress: goTab("Aprendizado") },
-    { key: "buscar",      label: "Buscar",                 icon: "search-outline",          onPress: goTab("Buscar") },
-    { key: "faq",         label: "Perguntas frequentes",   icon: "help-circle-outline",     onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
-    { key: "exam",        label: "Provas",     icon: "reader-outline",          onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
-    { key: "departamento",  label: "Departamento",              icon: "business-outline",       onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); } },
+    { key: "home", label: "Home", icon: "home-outline", onPress: goTab("Inicio") },
+    { key: "perfil", label: "Perfil", icon: "person-outline", onPress: goTab("Perfil") },
+    { key: "aprendizado", label: "Aprendizado", icon: "book-outline", onPress: goTab("Aprendizado") },
+    { key: "buscar", label: "Buscar", icon: "search-outline", onPress: goTab("Buscar") },
+    { key: "faq", label: "Perguntas frequentes", icon: "help-circle-outline", onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
+    { key: "exam", label: "Provas", icon: "reader-outline", onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
+    { key: "departamento", label: "Departamento", icon: "business-outline", onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); } },
   ];
 
   return (
@@ -74,12 +97,16 @@ export default function RootTabs() {
       >
         <Tab.Screen name="Inicio" component={HomeScreen} />
         <Tab.Screen name="Perfil" component={ProfileScreen} />
+        {/* 👇 Usa o stack no lugar da tela direta */}
         <Tab.Screen
           name="Aprendizado"
-          component={EnrolledCoursesScreen}
+          component={AprendizadoStack}
           options={{ tabBarLabel: "Aprendizado" }}
         />
-        <Tab.Screen name="Buscar" component={SearchScreen} />
+        <Tab.Screen
+          name="Buscar"
+          component={BuscarStack}
+        />
         <Tab.Screen
           name="Menu"
           component={MenuScreen}

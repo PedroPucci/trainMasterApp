@@ -81,7 +81,7 @@ function ThemedNavigation() {
   return (
     <NavigationContainer theme={navTheme}>
       <Stack.Navigator
-        initialRouteName="Entrar"
+        initialRouteName="App"
         screenOptions={{
           headerShown: false,
           contentStyle: { backgroundColor: hardBg },

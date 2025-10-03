@@ -36,3 +36,26 @@ export type ProfilePayload = {
 };
 
 export type LoginPayload = { cpf: string; password: string };
+
+
+export type Lesson = {
+  id: string;
+  title: string;
+  completed?: boolean; // ✔️
+  progressPercentage?: number; // 0–100 (p/ aulas em andamento)
+};
+
+export type ModuleBlock = {
+  id: string;
+  title: string;
+  lessons: Lesson[];
+};
+
+export type CourseDetail = {
+  id: string;
+  title: string;
+  exam: ModuleBlock;      // “Prova”
+  exercises: ModuleBlock[]; // “Exercícios”
+  completedModules: number;
+  totalModules: number;
+};
