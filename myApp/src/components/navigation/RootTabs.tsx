@@ -16,6 +16,7 @@ import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
 import SearchScreen from "../../screens/SearchScreen";
 import EnrolledCoursesScreen from "../../screens/EnrolledCoursesScreen";
+import OverviewScreen from "../../screens/OverviewScreen";
 
 type TabParamList = {
   Inicio: undefined;
@@ -30,11 +31,10 @@ type DrawerParamList = {
   Department: undefined;
   FaqScreen: undefined;
   ExamOverView: undefined;
+  Overview: undefined;
 };
 
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
-
-
 
 function MenuScreen() {
   return (
@@ -55,14 +55,72 @@ export default function RootTabs() {
     drawerNav.navigate("HomeTabs", { screen: tab });
   };
 
-  const items: { key: string; label: string; icon: IconName; onPress: () => void }[] = [
-    { key: "home",        label: "Home",                   icon: "home-outline",            onPress: goTab("Inicio") },
-    { key: "perfil",      label: "Perfil",                 icon: "person-outline",          onPress: goTab("Perfil") },
-    { key: "aprendizado", label: "Aprendizado",            icon: "book-outline",            onPress: goTab("Aprendizado") },
-    { key: "buscar",      label: "Buscar",                 icon: "search-outline",          onPress: goTab("Buscar") },
-    { key: "faq",         label: "Perguntas frequentes",   icon: "help-circle-outline",     onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
-    { key: "exam",        label: "Provas",     icon: "reader-outline",          onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
-    { key: "departamento",  label: "Departamento",              icon: "business-outline",       onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); } },
+  const items: {
+    key: string;
+    label: string;
+    icon: IconName;
+    onPress: () => void;
+  }[] = [
+    {
+      key: "home",
+      label: "Home",
+      icon: "home-outline",
+      onPress: goTab("Inicio"),
+    },
+    {
+      key: "perfil",
+      label: "Perfil",
+      icon: "person-outline",
+      onPress: goTab("Perfil"),
+    },
+    {
+      key: "aprendizado",
+      label: "Aprendizado",
+      icon: "book-outline",
+      onPress: goTab("Aprendizado"),
+    },
+    {
+      key: "buscar",
+      label: "Buscar",
+      icon: "search-outline",
+      onPress: goTab("Buscar"),
+    },
+    {
+      key: "faq",
+      label: "Perguntas frequentes",
+      icon: "help-circle-outline",
+      onPress: () => {
+        setMenuOpen(false);
+        drawerNav.navigate("FaqScreen");
+      },
+    },
+    {
+      key: "exam",
+      label: "Provas",
+      icon: "reader-outline",
+      onPress: () => {
+        setMenuOpen(false);
+        drawerNav.navigate("ExamOverView");
+      },
+    },
+    {
+      key: "departamento",
+      label: "Departamento",
+      icon: "business-outline",
+      onPress: () => {
+        setMenuOpen(false);
+        drawerNav.navigate("Department");
+      },
+    },
+    {
+      key: "overview",
+      label: "Matricula",
+      icon: "list-outline",
+      onPress: () => {
+        setMenuOpen(false);
+        drawerNav.navigate("Overview");
+      },
+    },
   ];
 
   return (
@@ -141,10 +199,18 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(255,255,255,0.4)",
     marginBottom: 8,
   },
-  sheetTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 8 },
+  sheetTitle: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
   list: { backgroundColor: "transparent" },
   row: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
   rowIcon: { color: "rgba(255,255,255,0.9)", width: 28 },
   rowLabel: { color: "#fff", fontSize: 16, marginLeft: 6 },
-  divider: { height: StyleSheet.hairlineWidth, backgroundColor: "rgba(255,255,255,0.15)" },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: "rgba(255,255,255,0.15)",
+  },
 });
