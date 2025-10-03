@@ -9,6 +9,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     marginBottom: 12,
+    textAlign : "center"
   },
   card: {
     backgroundColor: "#FFFFFF",

@@ -4,4 +4,5 @@ export const PATHS = {
   login: "/login",
   courses: "/courses",
   coursesSearch: "/courses/search", // GET ?name=
+  courseEnrolled:"/courses/enrolled",
 } as const;

@@ -22,6 +22,7 @@ export type Course = {
   description: string;
   thumbnailUrl?: string;
   duration?: string; // ex: "20:20"
+  progressPercentage?:number|null;
 };
 
 export type ProfilePayload = {
