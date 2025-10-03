@@ -153,7 +153,7 @@ const s = StyleSheet.create({
     elevation: 1,
   },
   cardSeparated: {
-    borderTopWidth: 4,
+    borderTopWidth: 0,
     borderTopColor: "#e9d8fd", // lilás claro
     marginTop: 12,
   },
