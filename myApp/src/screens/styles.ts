@@ -289,4 +289,62 @@ export const styles = StyleSheet.create({
     marginTop: -5,
     padding: 6,
   },
+  cardHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  cardUserInfo: {
+    marginLeft: 8,
+  },
+  ratingRow: {
+    flexDirection: "row",
+  },
+
+  primaryButton: {
+    padding: 12,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  primaryButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  overviewTitle: {
+    color: "#0F1E25",
+    fontSize: 20,
+    fontWeight: "800",
+    textAlign: "center",
+    marginBottom: 6,
+  },
+  overviewSubtitle: {
+    color: "#4A5A61",
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 12,
+    lineHeight: 20,
+    fontWeight: "600",
+  },
+  overviewDescription: {
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#444",
+    textAlign: "justify", 
+    marginBottom: 20,
+  },
+  overviewButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    alignItems: "center",
+    alignSelf: "center", 
+    width: "60%",
+    marginVertical: 16,
+  },
+  overviewButtonText: {
+    color: "#FFF",
+    fontSize: 16,
+    fontWeight: "700",
+  },
 });

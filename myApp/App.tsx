@@ -8,15 +8,19 @@ import {
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { ThemeProvider, useAppTheme } from "./src/components/theme/ThemeProvider";
+import {
+  ThemeProvider,
+  useAppTheme,
+} from "./src/components/theme/ThemeProvider";
 import LoginScreen from "./src/screens/LoginScreen";
 import RecoverPasswordScreen from "./src/screens/RecoverPasswordScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import RootTabs from "./src/components/navigation/RootTabs";
-import 'react-native-reanimated'; 
+import "react-native-reanimated";
 import FaqScreen from "./src/screens/FaqScreen";
 import ExamOverView from "./src/screens/ExamOverView";
 import Department from "./src/screens/Department";
+import OverviewScreen from "./src/screens/OverviewScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -49,13 +53,19 @@ function DrawerNavigator() {
         options={{ title: "Provas" }}
       />
 
-      <Drawer.Screen name="FaqScreen" component={FaqScreen} options={{ title: "Perguntas frequentes" }} />
+      <Drawer.Screen
+        name="FaqScreen"
+        component={FaqScreen}
+        options={{ title: "Perguntas frequentes" }}
+      />
 
       <Drawer.Screen name="Department" options={{ title: "Departamento" }}>
         {() => (
           <Department userName="Lydia" onLogout={() => console.log("Logout")} />
         )}
       </Drawer.Screen>
+      
+      <Drawer.Screen name="Overview" component={OverviewScreen} />
     </Drawer.Navigator>
   );
 }
