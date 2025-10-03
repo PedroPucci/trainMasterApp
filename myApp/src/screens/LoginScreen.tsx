@@ -1,7 +1,16 @@
 import { useState } from "react";
 import {
-  View, Text, TextInput, TouchableOpacity,
-  KeyboardAvoidingView, Platform, Image, ScrollView, StatusBar, Alert
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Image,
+  ScrollView,
+  StatusBar,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { styles as s } from "./styles";
@@ -9,11 +18,13 @@ import { maskCPF } from "../components/utils/masks";
 import { required, cpf as cpfValidator } from "../components/utils/validators";
 import * as Clipboard from "expo-clipboard";
 import { CommonActions } from "@react-navigation/native";
+import { BASE_URL, fetchComTimeout } from "../components/routes/apiConfig";
 
 export default function LoginScreen({ navigation }: any) {
   const [cpf, setCpf] = useState("");
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const copyPassword = async () => {
     if (!password) return;
@@ -24,9 +35,13 @@ export default function LoginScreen({ navigation }: any) {
     }
   };
 
-  const [errors, setErrors] = useState<{ cpf?: string | null; password?: string | null }>({});
+  const [errors, setErrors] = useState<{
+    cpf?: string | null;
+    password?: string | null;
+  }>({});
 
-  const TOP_SAFE = Platform.OS === "android" ? (StatusBar.currentHeight ?? 0) + 12 : 24;
+  const TOP_SAFE =
+    Platform.OS === "android" ? (StatusBar.currentHeight ?? 0) + 12 : 24;
 
   const validateCpfField = (): string | null => {
     const err = required(cpf, "CPF") ?? cpfValidator(cpf);
@@ -46,22 +61,61 @@ export default function LoginScreen({ navigation }: any) {
     return !e1 && !e2;
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (!validateForm()) return;
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [
-          {
-            name: "App",
-            params: {
-              screen: "HomeTabs",
-              params: { screen: "Inicio" },
+
+    const payload = {
+      cpf: cpf.replace(/\D/g, ""),
+      password: password,
+    };
+
+    try {
+      setLoading(true);
+      const url = `${BASE_URL}/auth/login`;
+
+      const res = await fetchComTimeout(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const raw = await res.text();
+
+      let data: any = null;
+      try {
+        data = JSON.parse(raw);
+      } catch {}
+
+      if (!res.ok) {
+        const msg =
+          data?.message ||
+          (res.status === 400
+            ? "Dados inválidos."
+            : raw || `HTTP ${res.status}`);
+        Alert.alert("Erro", msg);
+        return;
+      }
+
+      Alert.alert("Sucesso", "Acesso autorizado!");
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            {
+              name: "App", 
+              params: {
+                screen: "HomeTabs", 
+                params: { screen: "Inicio" }, 
+              },
             },
-          },
-        ],
-      })
-    );
+          ],
+        })
+      );
+    } catch (error) {
+      Alert.alert("Erro", "Falha ao fazer login. Verifique suas credenciais.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -72,7 +126,10 @@ export default function LoginScreen({ navigation }: any) {
       <View style={s.bubbleLg} />
       <View style={s.bubbleSm} />
 
-      <ScrollView contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
+      <ScrollView
+        contentContainerStyle={s.content}
+        keyboardShouldPersistTaps="handled"
+      >
         <Text style={s.title}>Seja bem-vindo!</Text>
         <Text style={s.subtitle}>
           Digite suas credenciais para{"\n"}acessar sua conta:
@@ -99,7 +156,14 @@ export default function LoginScreen({ navigation }: any) {
           />
         </View>
         {errors.cpf ? (
-          <Text style={{ color: "#E63946", fontSize: 12, fontWeight: "600", marginTop: 6 }}>
+          <Text
+            style={{
+              color: "#E63946",
+              fontSize: 12,
+              fontWeight: "600",
+              marginTop: 6,
+            }}
+          >
             {errors.cpf}
           </Text>
         ) : null}
@@ -118,11 +182,22 @@ export default function LoginScreen({ navigation }: any) {
             autoCapitalize="none"
           />
           <TouchableOpacity style={s.eye} onPress={() => setShowPwd((v) => !v)}>
-            <Feather name={showPwd ? "eye-off" : "eye"} size={18} color="#6D7A80" />
+            <Feather
+              name={showPwd ? "eye-off" : "eye"}
+              size={18}
+              color="#6D7A80"
+            />
           </TouchableOpacity>
         </View>
         {errors.password ? (
-          <Text style={{ color: "#E63946", fontSize: 12, fontWeight: "600", marginTop: 6 }}>
+          <Text
+            style={{
+              color: "#E63946",
+              fontSize: 12,
+              fontWeight: "600",
+              marginTop: 6,
+            }}
+          >
             {errors.password}
           </Text>
         ) : null}
@@ -131,14 +206,27 @@ export default function LoginScreen({ navigation }: any) {
           <Text style={s.forgotText}>Esqueceu sua senha?</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={s.btnPrimary} activeOpacity={0.9} onPress={onSubmit}>
-          <Text style={s.btnText}>Entrar</Text>
+        <TouchableOpacity
+          style={[s.btnPrimary, loading && { opacity: 0.7 }]}
+          activeOpacity={0.9}
+          onPress={onSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={s.btnText}>Entrar</Text>
+          )}
         </TouchableOpacity>
 
         <Text style={s.registerText}>
           Ainda não tem conta?
-          <Text style={s.registerLink} onPress={() => navigation?.navigate?.("Register")}>
-            {" "}Registrar
+          <Text
+            style={s.registerLink}
+            onPress={() => navigation?.navigate?.("Register")}
+          >
+            {" "}
+            Registrar
           </Text>
         </Text>
       </ScrollView>

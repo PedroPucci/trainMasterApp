@@ -62,6 +62,7 @@ export default function RootTabs() {
     { key: "buscar",      label: "Buscar",                 icon: "search-outline",          onPress: goTab("Buscar") },
     { key: "faq",         label: "Perguntas frequentes",   icon: "help-circle-outline",     onPress: () => { setMenuOpen(false); drawerNav.navigate("FaqScreen"); } },
     { key: "exam",        label: "Provas",     icon: "reader-outline",          onPress: () => { setMenuOpen(false); drawerNav.navigate("ExamOverView"); } },
+    { key: "departamento",  label: "Departamento",              icon: "business-outline",       onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); } },
   ];
 
   return (
