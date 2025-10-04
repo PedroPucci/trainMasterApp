@@ -77,7 +77,7 @@ export default function SearchScreen() {
 
 const renderItem = React.useCallback(
   ({ item }: { item: Course }) => (
-    <CourseCard item={{ ...item, progressPercentage: null }} />
+    <CourseCard item={{ ...item }} />
   ),
   []
 );

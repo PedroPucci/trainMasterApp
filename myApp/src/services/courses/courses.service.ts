@@ -5,7 +5,7 @@ import { COURSES_MOCK, mockFilterBySearch, mockGetEnrolledCourses } from "./cour
 
 // Por padrão, usei os MOCKS (true). 
 // Se quiser testar com a API real, defina EXPO_PUBLIC_USE_MOCKS=false no .env ou altere este valor temporariamente.
-const USE_MOCKS = (process.env.EXPO_PUBLIC_USE_MOCKS ?? "true").toLowerCase() === "true";
+const USE_MOCKS = (process.env.EXPO_PUBLIC_USE_MOCKS ?? "false").toLowerCase() === "true";
 const sleep = (ms = 350) => new Promise(r => setTimeout(r, ms));
 
 export const coursesService = {

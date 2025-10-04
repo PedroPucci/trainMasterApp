@@ -55,7 +55,7 @@ export default function EnrolledCoursesScreen() {
   }, [load]);
 
   const renderItem = React.useCallback(
-    ({ item }: { item: Course }) => <CourseCard item={item} />,
+    ({ item }: { item: Course }) => <CourseCard item={item} showbutton={true} progress={0} />,
     []
   );
 

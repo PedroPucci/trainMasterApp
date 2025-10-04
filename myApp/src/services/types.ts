@@ -15,14 +15,15 @@ export type ApiErrorShape = {
 
 // ===== Domínio Courses =====
 export type Course = {
-  id: string;
-  title: string;
-  author: string;
-  dateISO: string;
-  description: string;
-  thumbnailUrl?: string;
-  duration?: string; // ex: "20:20"
-  progressPercentage?:number|null;
+  id: string;                 // → "Id" (PK)
+  name: string;               // → "Name"
+  description: string;        // → "Description"
+  startDate: string;          // → "StartDate" (ISO string)
+  endDate: string;            // → "EndDate" (ISO string)
+  isActive: boolean;         // → "IsActive"
+  userId: number;            // → "UserId" (sempre 1 no mock)
+  createDate: string;        // → "CreateDate" (ISO string)
+  modificationDate: string;  // → "ModificationDate" (ISO string)
 };
 
 export type ProfilePayload = {
