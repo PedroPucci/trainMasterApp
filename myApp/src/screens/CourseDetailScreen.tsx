@@ -4,6 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import AppHeader from "../components/header/AppHeader";
 import type { CourseDetail, ModuleBlock, Lesson } from "../services";
 import { useAppTheme } from "../components/theme/ThemeProvider";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // MOCK rápido (pode vir do seu service depois)
 const MOCK: CourseDetail = {
@@ -44,44 +45,50 @@ const MOCK: CourseDetail = {
   totalModules: 5,
 };
 
+
 export default function CourseDetailScreen() {
   const course = MOCK;
-    const { theme } = useAppTheme();
-    const isDark = theme.name === "dark";
-    const hardBg = isDark ? "#000000" : "#FFFFFF";
-    const hardText = isDark ? "#FFFFFF" : "#000000";
-    
+  const insets = useSafeAreaInsets();
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
+
   return (
     <View style={{ flex: 1, backgroundColor: hardBg }}>
-      <AppHeader userName="Lydia" onLogout={() => {}} />
+      <AppHeader userName="Lydia" onLogout={() => { }} />
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 110, 120) }}>
         {/* Título */}
         <Text style={[s.title, { color: hardText }]}>{course.title}</Text>
 
         {/* Prova */}
         <Text style={[s.sectionTitle, { color: hardText }]}>Prova</Text>
-        <View style={s.card}>
-          <Text style={s.cardTitle}>{course.exam.title}</Text>
+        <View style={[s.card, { backgroundColor: hardBg }]}>
+          <View style={s.rowTop}>
+            <Text style={[s.cardTitle, { color: hardText }]}>{course.exam.title}</Text>
+
+            <Pressable style={s.cta} onPress={() => { }}>
+              <Text style={s.ctaText}>Entrar</Text>
+            </Pressable>
+          </View>
+
 
           {course.exam.lessons.map((l) => (
             <Row key={l.id} lesson={l} />
           ))}
 
-          <Pressable style={s.cta} onPress={() => {}}>
-            <Text style={s.ctaText}>Entrar</Text>
-          </Pressable>
         </View>
 
         {/* Exercícios */}
-        <Text style={[s.sectionTitle, { marginTop: 16,color: hardText }]}>Exercícios</Text>
+        <Text style={[s.sectionTitle, { marginTop: 16, color: hardText }]}>Exercícios</Text>
         <Text style={[s.subtitle, { color: hardText }]}>
           {course.completedModules} de {course.totalModules} módulos concluídos
         </Text>
 
         {course.exercises.map((m, idx) => (
-          <View key={m.id} style={[s.card, idx > 0 && s.cardSeparated]}>
-            <Text style={s.cardTitle}>{m.title}</Text>
+          <View key={m.id} style={[s.card, { backgroundColor: hardBg }, idx > 0 && s.cardSeparated]}>
+            <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
             {m.lessons.map((l) => (
               <Row key={l.id} lesson={l} />
             ))}
@@ -93,6 +100,10 @@ export default function CourseDetailScreen() {
 }
 
 function Row({ lesson }: { lesson: Lesson }) {
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
   const pct =
     typeof lesson.progressPercentage === "number" && !isNaN(lesson.progressPercentage)
       ? Math.min(100, Math.max(0, lesson.progressPercentage))
@@ -108,7 +119,7 @@ function Row({ lesson }: { lesson: Lesson }) {
         color={lesson.completed ? "#22c55e" : "#64748b"}
         style={{ marginRight: 6 }}
       />
-      <Text style={s.rowText}>
+      <Text style={[s.rowText, { color: hardText }]}>
         {lesson.title}
         {lesson.completed ? " (✓)" : ""}
         {inProgress ? `  (${pct}%)` : ""}
@@ -131,6 +142,11 @@ const s = StyleSheet.create({
     textAlign: "center",
     marginTop: 12,
     marginBottom: 8,
+  },
+  rowTop: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   sectionTitle: {
     fontSize: 16,
@@ -156,9 +172,12 @@ const s = StyleSheet.create({
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 1,
+    borderStyle: "solid",
+    borderColor: "white",
+    borderWidth: 1
   },
   cardSeparated: {
-    borderTopWidth: 0,
+    borderTopWidth: 1,
     marginTop: 12,
   },
   cardTitle: {
@@ -194,7 +213,6 @@ const s = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 10,
-    marginTop: 8,
   },
   ctaText: { color: "#fff", fontWeight: "800" },
 });
