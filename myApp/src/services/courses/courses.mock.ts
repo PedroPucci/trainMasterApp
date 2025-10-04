@@ -105,7 +105,5 @@ export function mockFilterBySearch(q?: string) {
 }
 
 export function mockGetEnrolledCourses() {
-  return COURSES_MOCK.filter(
-    (c) => typeof c.isActive
-  );
+  return COURSES_MOCK;
 }
