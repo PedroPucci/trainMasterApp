@@ -19,7 +19,7 @@ import RootTabs from "./src/components/navigation/RootTabs";
 import "react-native-reanimated";
 import FaqScreen from "./src/screens/FaqScreen";
 import ExamOverView from "./src/screens/ExamOverView";
-import Department from "./src/screens/Department";
+import DepartmentScreen from "./src/screens/Department";
 import OverviewScreen from "./src/screens/OverviewScreen";
 
 const Stack = createNativeStackNavigator();
@@ -59,13 +59,15 @@ function DrawerNavigator() {
         options={{ title: "Perguntas frequentes" }}
       />
 
-      <Drawer.Screen name="Department" options={{ title: "Departamento" }}>
-        {() => (
-          <Department userName="Lydia" onLogout={() => console.log("Logout")} />
-        )}
+      <Drawer.Screen
+        name="Department"
+        component={DepartmentScreen}
+        options={{ title: "Departamento" }}>
       </Drawer.Screen>
-      
-      <Drawer.Screen name="Overview" component={OverviewScreen} />
+
+      <Drawer.Screen
+        name="Overview"
+        component={OverviewScreen} />
     </Drawer.Navigator>
   );
 }

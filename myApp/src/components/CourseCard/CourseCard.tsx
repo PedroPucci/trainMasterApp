@@ -4,16 +4,16 @@ import { useAppTheme } from "../theme/ThemeProvider";
 import { Course } from "../../services";
 
 
-type Props = { item: Course };
+type Props = { item: Course, showbutton: boolean, progress: number };
 
-export default function CourseCard({ item }: Props) {
-  const dateBR = new Date(item.dateISO).toLocaleDateString("pt-BR", {
+export default function CourseCard({ item, showbutton, progress }: Props) {
+  const dateBR = new Date(item.startDate).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "long",
     year: "numeric"
   });
 
-    const formatCourseProgress = (progress?: number | null): string | null => {
+  const formatCourseProgress = (progress?: number | null): string | null => {
     // Se o valor for null, undefined ou não for número
     if (progress === null || progress === undefined || isNaN(progress)) {
       return null;
@@ -39,13 +39,13 @@ export default function CourseCard({ item }: Props) {
   const hardText = isDark ? "#FFFFFF" : "#000000";
   const hardMuted = isDark ? "#A3A3A3" : "#666666";
   const hardBorder = isDark ? "white 1px" : "#000000";
-  const progressTxt = formatCourseProgress(item.progressPercentage);
+  const progressTxt = formatCourseProgress(showbutton ? progress : null);
 
 
 
   return (
     <View style={[s.card, { backgroundColor: hardBg }]}>
-      <Text style={[s.title, { color: hardText }]}>{item.title}</Text>
+      <Text style={[s.title, { color: hardText }]}>{item.name}</Text>
       <Text style={s.date}>{dateBR}</Text>
 
       <View style={s.row}>
@@ -63,13 +63,16 @@ export default function CourseCard({ item }: Props) {
         </View>
 
         <View style={s.info}>
-          <Text style={[s.author, { color: hardText }]}>{item.author}</Text>
+          <Text style={[s.author, { color: hardText }]}>{item.author ||
+            "Desconhecido"}</Text>
           <Text numberOfLines={3} style={[s.desc, { color: hardText }]}>
             {item.description}
           </Text>
         </View>
       </View>
+        {showbutton? (
       <Text style={[s.progress, { color: hardText }]}>{progressTxt}</Text>
+         ) : null}
     </View>
   );
 }
