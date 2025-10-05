@@ -77,7 +77,7 @@ export default function SearchScreen() {
 
 const renderItem = React.useCallback(
   ({ item }: { item: Course }) => (
-    <CourseCard item={{ ...item, progressPercentage: null }} />
+    <CourseCard item={{ ...item }} showbutton={false} progress={0} />
   ),
   []
 );
@@ -87,10 +87,10 @@ const renderItem = React.useCallback(
   const EmptyState = React.useMemo(
     () => (
       <View style={ss.empty}>
-        <Text style={ss.emptyText}>Não existem cursos cadastrados</Text>
+        <Text style={[ss.emptyText, { color: hardText }]}>Não existem cursos cadastrados</Text>
       </View>
     ),
-    []
+    [hardText]
   );
 
   return (

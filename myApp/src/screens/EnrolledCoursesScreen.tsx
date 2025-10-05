@@ -77,9 +77,11 @@ export default function EnrolledCoursesScreen() {
 
   // ✅ navegação para detalhes ao tocar no card
   const renderItem = React.useCallback(
+
+    
     ({ item }: { item: Course }) => (
       <Pressable onPress={() => nav.navigate("CourseDetail", { id: item.id })}>
-        <CourseCard item={item} />
+       <CourseCard item={item} showbutton={true} progress={0} />
       </Pressable>
     ),
     [nav]
@@ -90,10 +92,10 @@ export default function EnrolledCoursesScreen() {
   const EmptyState = React.useMemo(
     () => (
       <View style={ss.empty}>
-        <Text style={ss.emptyText}>Não existem cursos para o usuário</Text>
+        <Text style={[ss.emptyText, { color: hardText }]}>Não existem cursos para o usuário</Text>
       </View>
     ),
-    []
+    [hardText]
   );
 
   return (
