@@ -25,7 +25,11 @@ export const routes = {
       const qs = new URLSearchParams({ name: search }).toString();
       return api.get<Course[]>(`${PATHS.coursesSearch}?${qs}`);
     },
-    getEnrolled: () => api.get<Course[]>(PATHS.courseEnrolled),
+    getEnrolled: () => {
+      const qs =  new URLSearchParams({ userId: "1" }).toString();// tem que vir do auth
+      return api.get<Course[]>(`${PATHS.courseEnrolled}?${qs}`);
+    },
+    //getEnrolled: () => api.get<Course[]>(PATHS.courseEnrolled),
   },
 };
 

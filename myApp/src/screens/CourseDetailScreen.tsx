@@ -88,7 +88,12 @@ export default function CourseDetailScreen() {
 
         {course.exercises.map((m, idx) => (
           <View key={m.id} style={[s.card, { backgroundColor: hardBg }, idx > 0 && s.cardSeparated]}>
-            <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
+            <View style={s.rowTop}>
+              <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
+              <Pressable style={s.cta} onPress={() => { }}>
+                <Text style={s.ctaText}>Entrar</Text>
+              </Pressable>
+            </View>
             {m.lessons.map((l) => (
               <Row key={l.id} lesson={l} />
             ))}
@@ -125,11 +130,11 @@ function Row({ lesson }: { lesson: Lesson }) {
         {inProgress ? `  (${pct}%)` : ""}
       </Text>
 
-      {inProgress && (
+      {/* {inProgress && (
         <View style={s.progressWrap}>
           <View style={[s.progressBar, pct !== null && { width: `${pct}%` }]} />
         </View>
-      )}
+      )} */}
     </View>
   );
 }

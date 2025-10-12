@@ -18,12 +18,15 @@ export type Course = {
   id: string;                 // → "Id" (PK)
   name: string;               // → "Name"
   description: string;        // → "Description"
+  author:string;              // -> nome do author
   startDate: string;          // → "StartDate" (ISO string)
   endDate: string;            // → "EndDate" (ISO string)
-  isActive: boolean;         // → "IsActive"
-  userId: number;            // → "UserId" (sempre 1 no mock)
-  createDate: string;        // → "CreateDate" (ISO string)
-  modificationDate: string;  // → "ModificationDate" (ISO string)
+  isActive: boolean;          // → "IsActive"
+  userId: number;             // → "UserId" (sempre 1 no mock)
+  createDate: string;         // → "CreateDate" (ISO string)
+  modificationDate: string;   // → "ModificationDate" (ISO string)
+  thumbnailUrl:string;
+  duration:string;
 };
 
 export type ProfilePayload = {

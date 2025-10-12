@@ -63,8 +63,7 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
         </View>
 
         <View style={s.info}>
-          <Text style={[s.author, { color: hardText }]}>{item.author ||
-            "Desconhecido"}</Text>
+          <Text style={[s.author, { color: hardText }]}>{item.author}</Text>
           <Text numberOfLines={3} style={[s.desc, { color: hardText }]}>
             {item.description}
           </Text>

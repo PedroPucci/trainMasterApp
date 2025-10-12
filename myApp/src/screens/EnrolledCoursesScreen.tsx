@@ -38,7 +38,7 @@ export default function EnrolledCoursesScreen() {
 
   // função que realmente busca
   const fetchEnrolled = React.useCallback(
-    async (signal?: AbortSignal) => {
+    async () => {
       setError(null);
       setLoading(true);
       try {
@@ -62,7 +62,7 @@ export default function EnrolledCoursesScreen() {
 
   React.useEffect(() => {
     const controller = new AbortController();
-    fetchEnrolled(controller.signal);
+    fetchEnrolled();
     return () => controller.abort();
   }, [fetchEnrolled]);
 
