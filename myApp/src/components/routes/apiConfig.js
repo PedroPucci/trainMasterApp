@@ -1,4 +1,4 @@
-const LOCAL = "http://10.0.2.2:7009/api";
+const LOCAL = "http://127.0.0.1:7009/api";
 const PROD = "https://discplinamobilenoite.onrender.com/api";
 
 const BASE_URL = __DEV__ ? LOCAL : PROD;

@@ -56,18 +56,33 @@ export default function QuestionRunner({
   const multiple = question.multiple ?? (mode === "exercise");
   const percent = Math.max(0, Math.min(100, (progress.current / progress.total) * 100));
 
-  const toggle = (id: string) => {
+  const toggle = React.useCallback((id: string) => {
+    let next: string[];
+
     if (multiple) {
-      onChangeSelected(selected.includes(id) ? selected.filter((x) => x !== id) : [...selected, id]);
+      // múltipla escolha: add/remove
+      next = selected.includes(id)
+        ? selected.filter(x => x !== id)
+        : [...selected, id];
     } else {
-      onChangeSelected([id]);
+      // única escolha: seleciona ou limpa
+      next = selected[0] === id ? [] : [id];
     }
-  };
+
+    onChangeSelected(next);
+  }, [multiple, selected, onChangeSelected]);
 
   const renderOption = ({ item }: { item: Option }) => {
     const isOn = selected.includes(item.id);
     return (
-      <Pressable style={[st.opt, { backgroundColor: cardBg }]} onPress={() => toggle(item.id)}>
+      <Pressable
+        style={[st.opt, { backgroundColor: cardBg }]}
+        onPress={() => toggle(item.id)}
+        android_ripple={{ color: "#e5e7eb" }}
+        hitSlop={8}
+        accessibilityRole="button"
+        accessibilityState={{ selected: isOn }}
+      >
         <View
           style={[
             st.optCheck,
@@ -76,7 +91,7 @@ export default function QuestionRunner({
         >
           {isOn ? <View style={st.optDot} /> : null}
         </View>
-        <Text style={[st.optText, { color: text }]} numberOfLines={2}>
+        <Text style={[st.optText,{ color: text, flex: 1, flexShrink: 1, flexWrap: "wrap" }]} numberOfLines={2}>
           {item.text}
         </Text>
       </Pressable>
@@ -84,69 +99,85 @@ export default function QuestionRunner({
   };
 
   return (
-  <View style={[st.container, { backgroundColor: hardBg }]}>
-    <AppHeader userName="Lydia" onLogout={() => {}} />
+    <View style={[st.container, { backgroundColor: hardBg }]}>
+      <AppHeader userName="Lydia" onLogout={() => { }} />
 
-    <FlatList
-      data={question.options}
-      keyExtractor={(o) => o.id}
-      renderItem={renderOption}
-      // 🔹 Tudo que vem antes das opções entra no Header:
-      ListHeaderComponent={
-        <>
-          <Text style={[st.screenTitle, { color: text }]}>
-            {title ?? (mode === "exam" ? "Prova" : "Questões")}
-          </Text>
+      <FlatList
+        data={question.options}
+        keyExtractor={(o) => o.id}
+        renderItem={renderOption}
+        extraData={{ selected, nextDisabled, prevDisabled, nextLabel, percent }}
 
-          <View style={st.progressWrap}>
-            <Text style={[st.progressLabel, { color: text }]}>Progresso</Text>
-            <View style={st.progressBar}>
-              <View style={[st.progressFill, { width: `${percent}%` }]} />
+        // 👇 quando muda a questão, reseta a lista inteira (garante estado fresco)
+        key={question.id}
+
+        // 👇 garante que toques funcionem mesmo com teclado aberto
+        keyboardShouldPersistTaps="handled"
+        // 🔹 Tudo que vem antes das opções entra no Header:
+        ListHeaderComponent={
+          <>
+            <Text style={[st.screenTitle, { color: text }]}>
+              {title ?? (mode === "exam" ? "Prova" : "Questões")}
+            </Text>
+
+            <View style={st.progressWrap}>
+              <Text style={[st.progressLabel, { color: text }]}>Progresso</Text>
+              <View style={st.progressBar}>
+                <View style={[st.progressFill, { width: `${percent}%` }]} />
+              </View>
+              <Text style={[st.progressRight, { color: text }]}>
+                {progress.current}/{progress.total}
+              </Text>
             </View>
-            <Text style={[st.progressRight, { color: text }]}>
-              {progress.current}/{progress.total}
-            </Text>
-          </View>
 
-          <View style={[st.card, { backgroundColor: cardBg }]}>
-            {!!question.imageUrl && (
-              <Image source={{ uri: question.imageUrl }} style={st.image} resizeMode="cover" />
+            <View style={[st.card, { backgroundColor: cardBg }]}>
+              {!!question.imageUrl && (
+                <Image source={{ uri: question.imageUrl }} style={st.image} resizeMode="cover" />
+              )}
+              <Text style={[st.statement, { color: text }]}>{question.statement}</Text>
+            </View>
+          </>
+        }
+        // 🔹 Botões embaixo como Footer (rolam junto também):
+        ListFooterComponent={
+          <View style={st.actions}>
+            {!hidePrev && (
+
+              <Pressable
+                style={({ pressed }) => [st.btnGhost, prevDisabled && st.btnDisabled, pressed && st.btnPressed]}
+                disabled={prevDisabled}
+                onPress={onPrev}
+                hitSlop={{ top: 12, right: 12, bottom: 12, left: 12 }}
+                pressRetentionOffset={{ top: 8, right: 8, bottom: 8, left: 8 }}
+                accessibilityRole="button"
+              >
+                <Ionicons pointerEvents="none" name="arrow-back" size={18} color={prevDisabled ? "#9CA3AF" : "#111827"} />
+                <Text pointerEvents="none" style={[st.btnGhostText, prevDisabled && { color: "#9CA3AF" }]}>
+                  Anterior
+                </Text>
+              </Pressable>
             )}
-            <Text style={[st.statement, { color: text }]}>{question.statement}</Text>
-          </View>
-        </>
-      }
-      // 🔹 Botões embaixo como Footer (rolam junto também):
-      ListFooterComponent={
-        <View style={st.actions}>
-          {!hidePrev && (
-            <Pressable
-              style={[st.btnGhost, prevDisabled && st.btnDisabled]}
-              disabled={prevDisabled}
-              onPress={onPrev}
-            >
-              <Ionicons name="arrow-back" size={18}  color={prevDisabled ? "#9CA3AF" : "#111827"} />
-              <Text style={[st.btnGhostText, prevDisabled && { color: "#9CA3AF" }]}>Anterior</Text>
-            </Pressable>
-          )}
 
-          <Pressable
-            style={[st.btnPrimary, nextDisabled && st.btnDisabled]}
-            disabled={nextDisabled}
-            onPress={onNext}
-          >
-            <Text style={[st.btnPrimaryText, nextDisabled && { color: "#9CA3AF" }]}>
-              {nextLabel}
-            </Text>
-            <Ionicons name="arrow-forward" size={18} color={nextDisabled ? "#9CA3AF" : "#111827"} />
-          </Pressable>
-        </View>
-      }
-      contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
-      // Qualidade de scroll melhor
-      showsVerticalScrollIndicator={false}
-    />
-  </View>
+            <Pressable
+              style={({ pressed }) => [st.btnPrimary, nextDisabled && st.btnDisabled, pressed && st.btnPressed]}
+              disabled={nextDisabled}
+              onPress={onNext}
+              hitSlop={{ top: 12, right: 12, bottom: 12, left: 12 }}
+              pressRetentionOffset={{ top: 8, right: 8, bottom: 8, left: 8 }}
+              accessibilityRole="button"
+            >
+              <Text pointerEvents="none" style={[st.btnPrimaryText, nextDisabled && { color: "#9CA3AF" }]}>
+                {nextLabel}
+              </Text>
+              <Ionicons pointerEvents="none" name="arrow-forward" size={18} color={nextDisabled ? "#9CA3AF" : "#111827"} />
+            </Pressable>
+          </View>
+        }
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+        // Qualidade de scroll melhor
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 }
 
@@ -214,8 +245,9 @@ const st = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 24,
-    marginBottom:90,
-    marginTop:30
+    minHeight: 44,
+    marginBottom: 90,
+    marginTop: 30
   },
   btnGhost: {
     flexDirection: "row",
@@ -223,6 +255,7 @@ const st = StyleSheet.create({
     gap: 8,
     backgroundColor: "#fff",
     borderRadius: 24,
+    minHeight: 44,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
@@ -233,10 +266,12 @@ const st = StyleSheet.create({
     gap: 8,
     backgroundColor: "#F4C241",
     borderRadius: 24,
+    minHeight: 44,
     paddingHorizontal: 18,
     paddingVertical: 12,
   },
   btnPrimaryText: { color: "#111827", fontWeight: "800", marginRight: 6 },
 
-  btnDisabled: { opacity: 0.6 }
+  btnDisabled: { opacity: 0.6 },
+  btnPressed: { opacity: 0.7 },
 });

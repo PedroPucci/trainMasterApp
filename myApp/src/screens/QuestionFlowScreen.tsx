@@ -1,6 +1,9 @@
 import React from "react";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import QuestionRunner, { Question } from "../components/QuestionRunner/QuestionRunner";
+import { ReviewParams } from "./ReviewAnswersScreen";
+import { AprendizadoStackParamList } from "../components/navigation/RootTabs";
+import { NativeStackNavigationProp } from "react-native-screens/lib/typescript/native-stack/types";
 
 /** ===========================
  * Params aceitos pela tela
@@ -21,7 +24,7 @@ const JAVA_EXAM: Question[] = [
   {
     id: "q1",
     statement: "Qual das opções representa corretamente o método principal em um programa Java?",
-    imageUrl:"https://wallpapers.com/images/hd/java-programming-language-logo-transparent-25l46zqv57xeywg7-25l46zqv57xeywg7.jpg",
+    imageUrl: "https://wallpapers.com/images/hd/java-programming-language-logo-transparent-25l46zqv57xeywg7-25l46zqv57xeywg7.jpg",
     options: [
       { id: "a", text: "public static int main(String args[])" },
       { id: "b", text: "public static void main(String[] args)" },
@@ -83,8 +86,9 @@ function resolveQuestions(source?: QuestionFlowParams["source"], override?: Ques
     default: return JAVA_EXAM; // fallback
   }
 }
-
+type Nav = NativeStackNavigationProp<AprendizadoStackParamList, "QuestionFlow">;
 export default function QuestionFlowScreen() {
+  const nav = useNavigation<Nav>();
   const route = useRoute<RouteProp<Record<string, QuestionFlowParams>, string>>();
   const {
     mode = "exam",
@@ -110,11 +114,14 @@ export default function QuestionFlowScreen() {
   };
 
   const onPrev = () => setIndex(i => Math.max(0, i - 1));
-  const onNext = () => {
+   const onNext = () => {
     if (isLast) {
-      // Aqui você verifica / envia para API / navega para resultado
-      // Exemplo: console.log("VERIFICAR", { mode, answers });
-      console.log("VERIFICAR", { mode, answers });
+      nav.navigate("ReviewAnswers", {
+        mode,
+        title: title ?? (mode === "exam" ? "Prova" : "Questões"),
+        questions: QUESTIONS,
+        answers,
+      } satisfies ReviewParams);
       return;
     }
     setIndex(i => Math.min(total - 1, i + 1));
