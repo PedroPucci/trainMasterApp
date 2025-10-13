@@ -21,6 +21,7 @@ import CourseDetailScreen from "../../screens/CourseDetailScreen"; // 👈 impor
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import type { DrawerParamList } from "./DrawerNavigator";
 import QuestionFlowScreen, { QuestionFlowParams } from "../../screens/QuestionFlowScreen";
+import ReviewAnswersScreen, { ReviewParams } from "../../screens/ReviewAnswersScreen";
 
 // 1) Tipos das rotas da Tab (nomes das abas)
 export type TabParamList = {
@@ -39,10 +40,11 @@ const Tab = createBottomTabNavigator<TabParamList>();
 //    - Assim, a Tab continua visível mesmo ao navegar pro detalhe.
 
 // 3.1) Stack da aba "Aprendizado"
-type AprendizadoStackParamList = {
+export type AprendizadoStackParamList = {
   AprendizadoHome: undefined;          // lista de cursos matriculados
   CourseDetail: { id: string };        // detalhe do curso (não aparece na Tab)
-  QuestionFlow:QuestionFlowParams
+  QuestionFlow:QuestionFlowParams;
+  ReviewAnswers: ReviewParams; 
 };
 const AprendizadoStackNav = createNativeStackNavigator<AprendizadoStackParamList>();
 
@@ -60,6 +62,10 @@ function AprendizadoStack() {
        <AprendizadoStackNav.Screen
         name="QuestionFlow"
         component={QuestionFlowScreen}
+      />
+             <AprendizadoStackNav.Screen
+        name="ReviewAnswers"
+        component={ReviewAnswersScreen}
       />
     </AprendizadoStackNav.Navigator>
   );
