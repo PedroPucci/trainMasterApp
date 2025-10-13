@@ -41,6 +41,7 @@ export type ProfilePayload = {
 
 export type LoginPayload = { cpf: string; password: string };
 
+export type LoginData = { cpf: string; id: number };
 
 export type Lesson = {
   id: string;

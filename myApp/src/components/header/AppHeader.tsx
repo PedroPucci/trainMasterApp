@@ -4,6 +4,8 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { styles } from "../header/styles";
 import { useAppTheme } from "../theme/ThemeProvider";
+import { profileService } from "../../services/profile/profile.service";
+import { authService } from "../../services/auth/auth.service";
 
 type RootStackParamList = {
   Entrar: undefined;
@@ -23,10 +25,12 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { mode, setMode } = useAppTheme();
+  const profileName = profileService.getUserName()?.split(" ")[0];
 
   const handleLogout = async () => {
     try {
-      await onLogout?.();
+      await authService.logout();
+      await profileService.cleanProfile();
     } finally {
       navigation.reset({ index: 0, routes: [{ name: "Entrar" }] });
     }
@@ -90,7 +94,7 @@ export default function AppHeader({ userName, onLogout, avatarUri }: Props) {
         {Avatar}
         <Text style={styles.greeting}>
           <Text style={styles.greetingLight}>Olá, </Text>
-          <Text style={styles.greetingBold}>{userName}</Text>
+          <Text style={styles.greetingBold}>{profileName}</Text>
         </Text>
       </View>
     </View>

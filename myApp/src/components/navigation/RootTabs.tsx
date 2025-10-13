@@ -12,7 +12,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useNavigation, NavigatorScreenParams } from "@react-navigation/native";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
-
 import FooterMenu from "../footer/FooterMenu";
 import HomeScreen from "../../screens/HomeScreen";
 import ProfileScreen from "../../screens/ProfileScreen";
@@ -20,10 +19,8 @@ import SearchScreen from "../../screens/SearchScreen";
 import EnrolledCoursesScreen from "../../screens/EnrolledCoursesScreen";
 import CourseDetailScreen from "../../screens/CourseDetailScreen"; // 👈 importa a tela de detalhes
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import OverviewScreen from "../../screens/OverviewScreen";
-
 import type { DrawerParamList } from "./DrawerNavigator";
-import DepartmentScreen from "../../screens/Department";
+import QuestionFlowScreen, { QuestionFlowParams } from "../../screens/QuestionFlowScreen";
 
 // 1) Tipos das rotas da Tab (nomes das abas)
 export type TabParamList = {
@@ -45,6 +42,7 @@ const Tab = createBottomTabNavigator<TabParamList>();
 type AprendizadoStackParamList = {
   AprendizadoHome: undefined;          // lista de cursos matriculados
   CourseDetail: { id: string };        // detalhe do curso (não aparece na Tab)
+  QuestionFlow:QuestionFlowParams
 };
 const AprendizadoStackNav = createNativeStackNavigator<AprendizadoStackParamList>();
 
@@ -58,6 +56,10 @@ function AprendizadoStack() {
       <AprendizadoStackNav.Screen
         name="CourseDetail"
         component={CourseDetailScreen}
+      />
+       <AprendizadoStackNav.Screen
+        name="QuestionFlow"
+        component={QuestionFlowScreen}
       />
     </AprendizadoStackNav.Navigator>
   );
