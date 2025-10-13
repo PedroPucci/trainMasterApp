@@ -19,6 +19,7 @@ import { required, cpf as cpfValidator } from "../components/utils/validators";
 import * as Clipboard from "expo-clipboard";
 import { CommonActions } from "@react-navigation/native";
 import { BASE_URL, fetchComTimeout } from "../components/routes/apiConfig";
+import { authService } from "../services/auth/auth.service";
 
 export default function LoginScreen({ navigation }: any) {
   const [cpf, setCpf] = useState("");
@@ -71,31 +72,7 @@ export default function LoginScreen({ navigation }: any) {
 
     try {
       setLoading(true);
-      const url = `${BASE_URL}/auth/login`;
-
-      const res = await fetchComTimeout(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const raw = await res.text();
-
-      let data: any = null;
-      try {
-        data = JSON.parse(raw);
-      } catch {}
-
-      if (!res.ok) {
-        const msg =
-          data?.message ||
-          (res.status === 400
-            ? "Dados inválidos."
-            : raw || `HTTP ${res.status}`);
-        Alert.alert("Erro", msg);
-        return;
-      }
-
+      const res = await authService.login(payload)
       Alert.alert("Sucesso", "Acesso autorizado!");
       navigation.dispatch(
         CommonActions.reset({
@@ -112,6 +89,7 @@ export default function LoginScreen({ navigation }: any) {
         })
       );
     } catch (error) {
+      console.log("Erro Login")
       Alert.alert("Erro", "Falha ao fazer login. Verifique suas credenciais.");
     } finally {
       setLoading(false);

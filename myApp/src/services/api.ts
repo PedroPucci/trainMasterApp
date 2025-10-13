@@ -19,9 +19,9 @@ import { Platform } from "react-native";
  * Elas devem ser configuradas no arquivo `.env` do projeto.
  */
 const ENV_PROD = process.env.EXPO_PUBLIC_API_URL;      // URL da API em produção → ex: https://api.suaapp.com
-const ENV_DEV  = process.env.EXPO_PUBLIC_API_URL_DEV;  // URL da API em desenvolvimento → ex: http://192.168.0.10:7009/api
+const ENV_DEV = process.env.EXPO_PUBLIC_API_URL_DEV;  // URL da API em desenvolvimento → ex: http://192.168.0.10:7009/api
 const PORT = process.env.EXPO_PUBLIC_API_PORT ?? "7009";        // Porta padrão usada no backend local
-const LAN  = process.env.EXPO_PUBLIC_API_LAN ?? "192.168.0.10"; // IP local da máquina de desenvolvimento
+const LAN = process.env.EXPO_PUBLIC_API_LAN ?? "192.168.0.10"; // IP local da máquina de desenvolvimento
 
 /**
  * ==============================
@@ -34,9 +34,25 @@ const LAN  = process.env.EXPO_PUBLIC_API_LAN ?? "192.168.0.10"; // IP local da m
  * 3. Caso contrário (iOS / físico), usa o IP LAN informado.
  */
 function resolveDevBaseUrl() {
-  if (ENV_DEV) return ENV_DEV; // prioridade para variável explícita
-  if (Platform.OS === "android") return `http://10.0.2.2:${PORT}/api`;
-  return `http://${LAN}:${PORT}/api`;
+  let resolved = "";
+  let reason = "";
+  if (Platform.OS === "android") {
+    resolved = `http://10.0.2.2:${PORT}/api`;
+    reason = "modo Android (10.0.2.2 mapeia para localhost do host)";
+  } else if (ENV_DEV) {
+    resolved = ENV_DEV;
+    reason = "usando EXPO_PUBLIC_API_URL_DEV do .env";
+  } else {
+    resolved = `http://${LAN}:${PORT}/api`;
+    reason = "modo iOS / físico, usando IP de LAN";
+  }
+
+  // 🔹 loga a origem da baseURL
+  console.log(
+    `[API:DEV] Base URL resolvida → ${resolved}\n[Motivo] ${reason}`
+  );
+
+  return resolved;
 }
 
 /**
@@ -47,9 +63,26 @@ function resolveDevBaseUrl() {
  * - Em modo DEV → usamos o retorno da função acima
  * - Em modo PROD → usamos a ENV_PROD ou uma fallback genérica
  */
-const baseURL = __DEV__
-  ? resolveDevBaseUrl()
-  : (ENV_PROD ?? "https://seu-dominio.com/api");
+const baseURL = (() => {
+  if (__DEV__) {
+    const url = resolveDevBaseUrl();
+    console.log(
+      `[API:BASE] Ambiente → DEV\n[URL usada] ${url}`
+    );
+    return url;
+  }
+
+  const url = ENV_PROD ?? "https://seu-dominio.com/api";
+  const reason = ENV_PROD
+    ? "usando EXPO_PUBLIC_API_URL (produção configurada)"
+    : "variável PROD ausente → fallback para domínio padrão";
+
+  console.log(
+    `[API:BASE] Ambiente → PROD\n[URL usada] ${url}\n[Motivo] ${reason}`
+  );
+
+  return url;
+})();
 
 /**
  * ==============================

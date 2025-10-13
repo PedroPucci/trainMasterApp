@@ -1,8 +1,8 @@
 // Centraliza rotas do backend
 export const PATHS = {
   profile: "/profile",
-  login: "/login",
+  login: "/auth/login",
   courses: "/courses",
-  coursesSearch: "/courses/search",
-  courseEnrolled:"/courses",
+  coursesSearch: "/courses/GetByName",
+  courseEnrolled:"/courses/GetByUserId",
 } as const;

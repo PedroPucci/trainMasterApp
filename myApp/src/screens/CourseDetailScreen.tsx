@@ -5,6 +5,8 @@ import AppHeader from "../components/header/AppHeader";
 import type { CourseDetail, ModuleBlock, Lesson } from "../services";
 import { useAppTheme } from "../components/theme/ThemeProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useNavigation,NavigationProp } from "@react-navigation/native";
+import { goToExamFlow, goToExerciseFlow } from "../components/utils/questionsHelpers";
 
 // MOCK rápido (pode vir do seu service depois)
 const MOCK: CourseDetail = {
@@ -46,7 +48,9 @@ const MOCK: CourseDetail = {
 };
 
 
+
 export default function CourseDetailScreen() {
+  const nav = useNavigation();
   const course = MOCK;
   const insets = useSafeAreaInsets();
   const { theme } = useAppTheme();
@@ -68,7 +72,7 @@ export default function CourseDetailScreen() {
           <View style={s.rowTop}>
             <Text style={[s.cardTitle, { color: hardText }]}>{course.exam.title}</Text>
 
-            <Pressable style={s.cta} onPress={() => { }}>
+            <Pressable style={s.cta} onPress={() => goToExamFlow(nav.navigate, "Prova" )}>
               <Text style={s.ctaText}>Entrar</Text>
             </Pressable>
           </View>
@@ -88,7 +92,12 @@ export default function CourseDetailScreen() {
 
         {course.exercises.map((m, idx) => (
           <View key={m.id} style={[s.card, { backgroundColor: hardBg }, idx > 0 && s.cardSeparated]}>
-            <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
+            <View style={s.rowTop}>
+              <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
+              <Pressable style={s.cta} onPress={() => goToExerciseFlow(nav.navigate, "javaExercises")  }>
+                <Text style={s.ctaText}>Entrar</Text>
+              </Pressable>
+            </View>
             {m.lessons.map((l) => (
               <Row key={l.id} lesson={l} />
             ))}
@@ -125,11 +134,11 @@ function Row({ lesson }: { lesson: Lesson }) {
         {inProgress ? `  (${pct}%)` : ""}
       </Text>
 
-      {inProgress && (
+      {/* {inProgress && (
         <View style={s.progressWrap}>
           <View style={[s.progressBar, pct !== null && { width: `${pct}%` }]} />
         </View>
-      )}
+      )} */}
     </View>
   );
 }
