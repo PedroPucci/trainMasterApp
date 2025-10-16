@@ -1,7 +1,9 @@
+import { baseURL } from "../../services";
+
 const LOCAL = "http://127.0.0.1:7009/api";
 const PROD = "https://discplinamobilenoite.onrender.com/api";
 
-const BASE_URL = __DEV__ ? LOCAL : PROD;
+const BASE_URL = baseURL
 
 const fetchComTimeout = (url, options, timeout = 9000) => {
   return Promise.race([
@@ -12,4 +14,4 @@ const fetchComTimeout = (url, options, timeout = 9000) => {
   ]);
 };
 
-export { BASE_URL, fetchComTimeout };
+export { BASE_URL,fetchComTimeout };

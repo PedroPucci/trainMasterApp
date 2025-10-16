@@ -2,8 +2,7 @@
 export type QuestionFlowParams = {
   mode: "exercise" | "exam";
   title: string;
-  source?: string;      // quando for usar um mock interno (ex.: "javaExercises")
-  questions?: any[];    // troque para seu tipo Question[] se preferir
+  questions: any[];    // troque para seu tipo Question[] se preferir
   startIndex?: number;  // opcional
 };
 
@@ -18,10 +17,10 @@ export function goToQuestionFlow(navigate: NavigateFn, params: QuestionFlowParam
 }
 
 /** Caso 1: Exercícios (multiple choice) usando um mock interno via 'source' */
-export function goToExerciseFlow(navigate: NavigateFn, source: string) {
+export function goToExerciseFlow(navigate: NavigateFn, questions: any[]) {
   goToQuestionFlow(navigate, {
     mode: "exercise",
-    source,
+    questions,
     title: `Questões`,
   });
 }
@@ -30,7 +29,7 @@ export function goToExerciseFlow(navigate: NavigateFn, source: string) {
 export function goToExamFlow(
   navigate: NavigateFn,
   title: string,
-  questions?: any[] // troque para seu tipo Question[] se quiser
+  questions: any[] // troque para seu tipo Question[] se quiser
 ) {
   goToQuestionFlow(navigate, {
     mode: "exam",

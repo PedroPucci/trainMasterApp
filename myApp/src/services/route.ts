@@ -1,7 +1,7 @@
 import { api } from "./api";
 import { authService } from "./auth/auth.service";
 import { PATHS } from "./paths";
-import type { Course, LoginPayload, ProfilePayload } from "./types";
+import type { Course, CourseActivity, Exam, LoginPayload, ProfilePayload } from "./types";
 
 
 
@@ -23,7 +23,11 @@ export const routes = {
     forgotPassword: (payload: { email: string; newPassword: string }) =>
       api.post(`${PATHS.login}/ForgotPassword`, payload),
   },
-
+  courseActivities: {
+    getAll: () => api.get<CourseActivity[]>(`${PATHS.coursesActivities}/all`),
+    getAllQuestionsFromCourse: (id: number) => api.get(`${PATHS.coursesActivities}/${id}/questions`),
+    getAllExams: () => api.get<Exam[]>(`${PATHS.exams}/all`),
+  },
   courses: {
     getAll: () => api.get<Course[]>(PATHS.courses),
     getBySearch: (search: string) => {
