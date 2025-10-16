@@ -18,7 +18,6 @@ export type DrawerParamList = {
   Department: undefined; // Exemplo de rota que ainda não tem tela real
   FaqScreen: undefined;  // Pode adicionar depois
   ExamOverView: undefined;
-  Overview: undefined;
 };
 
 // 2) Cria o Navigator do Drawer

@@ -20,7 +20,6 @@ import "react-native-reanimated";
 import FaqScreen from "./src/screens/FaqScreen";
 import ExamOverView from "./src/screens/ExamOverView";
 import DepartmentScreen from "./src/screens/Department";
-import OverviewScreen from "./src/screens/OverviewScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -64,10 +63,6 @@ function DrawerNavigator() {
         component={DepartmentScreen}
         options={{ title: "Departamento" }}>
       </Drawer.Screen>
-
-      <Drawer.Screen
-        name="Overview"
-        component={OverviewScreen} />
     </Drawer.Navigator>
   );
 }

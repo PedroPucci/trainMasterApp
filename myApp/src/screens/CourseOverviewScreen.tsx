@@ -7,13 +7,22 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+} from "@react-navigation/native";
 import AppHeader from "../components/header/AppHeader";
 import { styles as s } from "./styles";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useAppTheme } from "../components/theme/ThemeProvider";
 import { BASE_URL, fetchComTimeout } from "../components/routes/apiConfig";
 
+export type CourseOverviewParams = {
+  courseId: number;
+};
 
 type Feedback = {
   id: number;
@@ -23,35 +32,20 @@ type Feedback = {
   rating: number;
 };
 
-// const feedbacks: Feedback[] = [
-//   {
-//     id: 1,
-//     user: "Maria Aline",
-//     date: "10/05/2022",
-//     comment: "Aprendi bastante sobre o curso, recomendo!",
-//     rating: 5,
-//   },
-//   {
-//     id: 2,
-//     user: "Pedro Lucas",
-//     date: "12/09/2023",
-//     comment:
-//       "Gostei muito do curso e tive oportunidade de melhorar meu conhecimento.",
-//     rating: 4,
-//   },
-//   {
-//     id: 3,
-//     user: "Lia",
-//     date: "11/01/2024",
-//     comment: "Curso muito bom, mas o instrutor podia falar mais devagar.",
-//     rating: 4,
-//   },
-// ];
+type Course = {
+  name: string;
+  description: string;
+  author: string;
+  startDate: string;
+  endDate: string;
+  isActive: boolean;
+  userId: number;
+};
 
 function RatingStars({ rating }: { rating: number }) {
   return (
     <View style={{ flexDirection: "row", marginTop: 4 }}>
-      {Array.from({ length: 5 }).map((_, i) => (
+      {Array.from({ length: 5 }).map((item, i) => (
         <Ionicons
           key={i}
           name={i < rating ? "star" : "star-outline"}
@@ -79,42 +73,75 @@ function FeedbackCard({ user, date, comment, rating }: Feedback) {
   );
 }
 
-export default function OverviewScreen() {
+export default function CourseOverviewScreen() {
+  const route =
+    useRoute<RouteProp<Record<string, CourseOverviewParams>, string>>();
+  const { courseId } = route.params ?? {};
+  console.log("CourseOverviewScreen - route:", route);
+  const navigate = useNavigation<any>();
   const { theme } = useAppTheme() ?? {
     theme: { name: "light", colors: { primary: "#51C391" } },
   };
   const hardText = theme.name === "dark" ? "#FFF" : "#000";
 
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
+  const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
-  const [successModal, setSuccessModal] = React.useState(false);
-  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [successModal, setSuccessModal] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleMatricula = () => setSuccessModal(true);
 
   useEffect(() => {
-    const fetchFeedbacks = async () => {
+    if (!courseId) {
+      console.warn("CourseOverviewScreen: courseId não fornecido nos params");
+    }
+
+    const fetchData = async () => {
       try {
-        const response = await fetchComTimeout(`${BASE_URL}/course-feedback`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (!response.ok) {
-          throw new Error("Erro ao buscar feedbacks");
+        const [courseRes, feedbackRes] = await Promise.all([
+          fetchComTimeout(`${BASE_URL}/courses/${courseId}`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }),
+          fetchComTimeout(`${BASE_URL}/course-feedback`, {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+          }),
+        ]);
+
+        if (!courseRes.ok || !feedbackRes.ok) {
+          throw new Error("Erro ao buscar dados do curso ou feedbacks");
         }
-        const data = await response.json();
-        setFeedbacks(data);
+
+        const courseData = await courseRes.json();
+        const feedbackData = await feedbackRes.json();
+
+        setCourse(courseData);
+        setFeedbacks(feedbackData);
       } catch (error) {
-        console.error("Erro:", error);
+        console.error("Erro ao carregar dados:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchFeedbacks();
-  }, []);
+    fetchData();
+  }, [courseId]);
+
+  if (loading) {
+    return (
+      <View
+        style={[
+          s.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator size="large" color="#50C2C9" />
+        <Text>Carregando informações...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={[s.container, { backgroundColor: "#E9F1F0", flex: 1 }]}>
@@ -124,14 +151,21 @@ export default function OverviewScreen() {
         contentContainerStyle={[s.body, s.scrollContent]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={s.overviewTitle}>Fundamentos da Web</Text>
-        <Text style={s.overviewSubtitle}>Visão Geral</Text>
+        <Text style={s.overviewTitle}>{course?.name ?? "Curso"}</Text>
+        <Text style={s.overviewSubtitle}>
+          Instrutor(a): {course?.author ?? "Desconhecido"}
+        </Text>
+
         <Text style={s.overviewDescription}>
-          Aprenda os princípios básicos da internet e como funciona a
-          comunicação cliente-servidor.{"\n"}
-          Conheça a estrutura do HTML e as principais tags utilizadas.{"\n"}
-          Entenda noções iniciais de CSS para estilizar páginas.{"\n"}
-          Pratique com exercícios e provas para fixar o aprendizado.
+          {course?.description ?? "Descrição não disponível no momento."}
+        </Text>
+
+        <Text style={[s.sectionTitle, { marginTop: 8, color: hardText }]}>
+          Período:
+        </Text>
+        <Text style={{ color: "#555", fontSize: 13 }}>
+          {new Date(course?.startDate ?? "").toLocaleDateString("pt-BR")} até{" "}
+          {new Date(course?.endDate ?? "").toLocaleDateString("pt-BR")}
         </Text>
 
         <TouchableOpacity
@@ -142,13 +176,16 @@ export default function OverviewScreen() {
         </TouchableOpacity>
 
         <Text style={[s.sectionTitle, { color: hardText }]}>Feedbacks:</Text>
-        {feedbacks.map((fb) => (
-          <FeedbackCard key={fb.id} {...fb} />
-        ))}
+        {feedbacks.length > 0 ? (
+          feedbacks.map((fb) => <FeedbackCard key={fb.date} {...fb} />)
+        ) : (
+          <Text style={{ color: "#555", marginTop: 8 }}>
+            Nenhum feedback disponível ainda.
+          </Text>
+        )}
       </ScrollView>
 
-        
-
+      {/* Modal de sucesso */}
       <Modal
         visible={successModal}
         transparent
@@ -168,15 +205,16 @@ export default function OverviewScreen() {
                 local.primaryButton,
                 { backgroundColor: "#50C2C9", marginTop: 16 },
               ]}
-              onPress={() => setSuccessModal(false)}
+              onPress={() => {
+                setSuccessModal(false);
+                navigate.navigate("AprendizadoHome");
+              }}
             >
-              <Text style={local.primaryButtonText}>Fechar</Text>
+              <Text style={local.primaryButtonText}>Ir para meus cursos</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-
-
     </View>
   );
 }
@@ -220,37 +258,4 @@ const local = StyleSheet.create({
     elevation: 4,
   },
   modalTitle: { marginTop: 12, fontSize: 18, fontWeight: "600", color: "#333" },
-  menuOverlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.3)" },
-  menuContainer: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    width: "70%",
-    backgroundColor: "#FFF",
-    padding: 20,
-    elevation: 6,
-  },
-  menuTitle: { fontSize: 20, fontWeight: "bold", marginBottom: 20 },
-  menuItem: { flexDirection: "row", alignItems: "center", paddingVertical: 12 },
-  menuItemText: { marginLeft: 10, fontSize: 16, color: "#333" },
-
-  bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    paddingVertical: 8,
-    borderTopWidth: 1,
-    borderTopColor: "#ddd",
-  },
-  navItem: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  navText: {
-    fontSize: 12,
-    marginTop: 2,
-    color: "#333",
-  },
 });

@@ -1,7 +1,8 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 import { useAppTheme } from "../theme/ThemeProvider";
 import { Course } from "../../services";
+import { useNavigation } from "@react-navigation/native";
 
 
 type Props = { item: Course, showbutton: boolean, progress: number };
@@ -12,7 +13,7 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
     month: "long",
     year: "numeric"
   });
-
+  
   const formatCourseProgress = (progress?: number | null): string | null => {
     // Se o valor for null, undefined ou não for número
     if (progress === null || progress === undefined || isNaN(progress)) {
@@ -32,8 +33,10 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
 
     return `${safeProgress}%`;
   }
-
+  
   const { theme } = useAppTheme();
+  console.log("CourseCard - item:", item);
+  const navigation = useNavigation<any>();
   const isDark = theme.name === "dark";
   const hardBg = isDark ? "#000000" : "#FFFFFF";
   const hardText = isDark ? "#FFFFFF" : "#000000";
@@ -41,10 +44,12 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
   const hardBorder = isDark ? "white 1px" : "#000000";
   const progressTxt = formatCourseProgress(showbutton ? progress : null);
 
-
+  function handlePress() {
+    navigation.navigate("Aprendizado", { screen:  "CourseOverview", params: { courseId: item.id } });
+  }
 
   return (
-    <View style={[s.card, { backgroundColor: hardBg }]}>
+    <Pressable style={[s.card, { backgroundColor: hardBg }]} onPress={handlePress}>
       <Text style={[s.title, { color: hardText }]}>{item.name}</Text>
       <Text style={s.date}>{dateBR}</Text>
 
@@ -72,7 +77,7 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
         {showbutton? (
       <Text style={[s.progress, { color: hardText }]}>{progressTxt}</Text>
          ) : null}
-    </View>
+    </Pressable>
   );
 }
 
