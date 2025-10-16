@@ -15,6 +15,7 @@ import { useAppTheme } from "../components/theme/ThemeProvider";
 import CourseCard from "../components/CourseCard/CourseCard";
 import { Course, coursesService } from "../services";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AprendizadoStackParamList } from "../components/navigation/RootTabs";
 
 export default function EnrolledCoursesScreen() {
   const { theme } = useAppTheme();
@@ -27,12 +28,9 @@ export default function EnrolledCoursesScreen() {
   const [refreshing, setRefreshing] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
 
-  type RootStackParamList = {
-    Search: undefined;
-    CourseDetail: { id: string };
-  };
 
-  type Nav = NativeStackNavigationProp<RootStackParamList, "Search">;
+
+  type Nav = NativeStackNavigationProp<AprendizadoStackParamList, "AprendizadoHome">;
   const nav = useNavigation<Nav>();
 
 
@@ -80,7 +78,7 @@ export default function EnrolledCoursesScreen() {
 
     
     ({ item }: { item: Course }) => (
-      <Pressable onPress={() => nav.navigate("CourseDetail", { id: item.id })}>
+      <Pressable onPress={() => nav.navigate("CourseDetail", { course: item})}>
        <CourseCard item={item} showbutton={true} progress={0} />
       </Pressable>
     ),

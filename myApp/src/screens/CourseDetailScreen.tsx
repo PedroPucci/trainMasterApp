@@ -2,11 +2,13 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AppHeader from "../components/header/AppHeader";
-import type { CourseDetail, ModuleBlock, Lesson } from "../services";
+import type { CourseDetail, ModuleBlock, Lesson, CourseActivity, CourseActivityWithQuestions, ActivitiesAndExams } from "../services";
 import { useAppTheme } from "../components/theme/ThemeProvider";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useNavigation,NavigationProp } from "@react-navigation/native";
+import { useNavigation, NavigationProp, RouteProp, useRoute } from "@react-navigation/native";
 import { goToExamFlow, goToExerciseFlow } from "../components/utils/questionsHelpers";
+import { CoursesActivityService } from "../services/courseActivities/courseActivities";
+import { AprendizadoStackParamList } from "../components/navigation/RootTabs";
 
 // MOCK rápido (pode vir do seu service depois)
 const MOCK: CourseDetail = {
@@ -47,7 +49,7 @@ const MOCK: CourseDetail = {
   totalModules: 5,
 };
 
-
+type CourseDetailRouteProp = RouteProp<AprendizadoStackParamList, "CourseDetail">;
 
 export default function CourseDetailScreen() {
   const nav = useNavigation();
@@ -57,6 +59,43 @@ export default function CourseDetailScreen() {
   const isDark = theme.name === "dark";
   const hardBg = isDark ? "#000000" : "#FFFFFF";
   const hardText = isDark ? "#FFFFFF" : "#000000";
+  const route = useRoute<CourseDetailRouteProp>();
+  const course2 = route.params.course;
+  const [dataQuestion, setDataQuestion] = React.useState<ActivitiesAndExams>();
+  const [loading, setLoading] = React.useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  // função que realmente busca
+  const fetchEnrolled = React.useCallback(
+    async () => {
+      //if (!course2?.id) return;
+      setError(null);
+      setLoading(true);
+      try {
+        const items = await CoursesActivityService.getAllFilterById(1);
+        setDataQuestion(items);
+      } catch (e: any) {
+        if (
+          e?.name !== "CanceledError" &&
+          e?.message !== "canceled" &&
+          e?.code !== "ERR_CANCELED"
+        ) {
+          setError(e?.message || "Falha ao carregar Atividades.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  React.useEffect(() => {
+     
+    const controller = new AbortController();
+    fetchEnrolled();
+    return () => controller.abort();
+  }, [fetchEnrolled]);
 
   return (
     <View style={{ flex: 1, backgroundColor: hardBg }}>
@@ -64,43 +103,43 @@ export default function CourseDetailScreen() {
 
       <ScrollView contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + 110, 120) }}>
         {/* Título */}
-        <Text style={[s.title, { color: hardText }]}>{course.title}</Text>
+        <Text style={[s.title, { color: hardText }]}>{course2.name}</Text>
 
         {/* Prova */}
         <Text style={[s.sectionTitle, { color: hardText }]}>Prova</Text>
         <View style={[s.card, { backgroundColor: hardBg }]}>
           <View style={s.rowTop}>
-            <Text style={[s.cardTitle, { color: hardText }]}>{course.exam.title}</Text>
+            <Text style={[s.cardTitle, { color: hardText }]}>{dataQuestion?.exams[0].title}</Text>
 
-            <Pressable style={s.cta} onPress={() => goToExamFlow(nav.navigate, "Prova" )}>
+            <Pressable style={s.cta} onPress={() => goToExamFlow(nav.navigate, "Prova",dataQuestion?.activities[0].questions||[])}>
               <Text style={s.ctaText}>Entrar</Text>
             </Pressable>
           </View>
 
 
-          {course.exam.lessons.map((l) => (
+          {/* {course.exam.lessons.map((l) => (
             <Row key={l.id} lesson={l} />
-          ))}
+          ))} */}
 
         </View>
 
         {/* Exercícios */}
         <Text style={[s.sectionTitle, { marginTop: 16, color: hardText }]}>Exercícios</Text>
         <Text style={[s.subtitle, { color: hardText }]}>
-          {course.completedModules} de {course.totalModules} módulos concluídos
+          0 de {dataQuestion?.activities.length} módulos concluídos
         </Text>
 
-        {course.exercises.map((m, idx) => (
+        {dataQuestion?.activities.map((m, idx) => (
           <View key={m.id} style={[s.card, { backgroundColor: hardBg }, idx > 0 && s.cardSeparated]}>
             <View style={s.rowTop}>
               <Text style={[s.cardTitle, { color: hardText }]}>{m.title}</Text>
-              <Pressable style={s.cta} onPress={() => goToExerciseFlow(nav.navigate, "javaExercises")  }>
+              <Pressable style={s.cta} onPress={() => goToExerciseFlow(nav.navigate, m.questions)}>
                 <Text style={s.ctaText}>Entrar</Text>
               </Pressable>
             </View>
-            {m.lessons.map((l) => (
+            {/* {m.questions.map((l) => (
               <Row key={l.id} lesson={l} />
-            ))}
+            ))} */}
           </View>
         ))}
       </ScrollView>

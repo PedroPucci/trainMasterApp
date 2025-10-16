@@ -63,7 +63,7 @@ function resolveDevBaseUrl() {
  * - Em modo DEV → usamos o retorno da função acima
  * - Em modo PROD → usamos a ENV_PROD ou uma fallback genérica
  */
-const baseURL = (() => {
+export const baseURL = (() => {
   if (__DEV__) {
     const url = resolveDevBaseUrl();
     console.log(

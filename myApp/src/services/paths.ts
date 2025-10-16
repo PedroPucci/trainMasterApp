@@ -5,4 +5,6 @@ export const PATHS = {
   courses: "/courses",
   coursesSearch: "/courses/GetByName",
   courseEnrolled:"/courses/GetByUserId",
+  coursesActivities:"/course-activities",
+  exams:"/exams"
 } as const;
