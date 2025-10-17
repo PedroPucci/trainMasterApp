@@ -19,6 +19,7 @@ import { required, email, cpf, birthDateBR, oneOf } from "../components/utils/va
 import { maskDateBR, maskCPF } from "../components/utils/masks";
 import { BASE_URL, fetchComTimeout } from "../components/routes/apiConfig";
 import { useAppTheme } from "../components/theme/ThemeProvider";
+import { authService } from "../services/auth/auth.service";
 
 const ESTADOS_CIVIS = ["Solteiro", "Casado", "Divorciado", "Viúvo", "União estável"];
 const GENEROS = ["Feminino", "Masculino", "Outro", "Prefiro não dizer"];
@@ -155,7 +156,7 @@ export default function ProfileScreen() {
   const [errors, setErrors] = useState<Errors>({});
   const [loading, setLoading] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
-  const USER_ID = 1;
+  const USER_ID = authService.getUserId();
 
   const update = (k: keyof Form) => (v: string) => setForm((f) => ({ ...f, [k]: v }));
 

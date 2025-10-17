@@ -26,7 +26,7 @@ export type CourseOverviewParams = {
 
 type Feedback = {
   id: number;
-  user: string;
+  studentId: string;
   date: string;
   comment: string;
   rating: number;
@@ -57,17 +57,25 @@ function RatingStars({ rating }: { rating: number }) {
   );
 }
 
-function FeedbackCard({ user, date, comment, rating }: Feedback) {
+function FeedbackCard({ studentId, date, comment, rating }: Feedback) {
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
+  const hardBorder = isDark ? "#FFFFFF 0px 0px 1px" : "#000000 0px 0px 0px";
+
   return (
-    <View style={local.card}>
+    <View style={[local.card, {
+      backgroundColor: hardBg,
+    }]}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Ionicons name="person-circle" size={40} color="#4F7CAC" />
         <View style={{ marginLeft: 8 }}>
-          <Text style={local.cardUser}>{user}</Text>
-          <Text style={local.cardDate}>{date}</Text>
+          <Text style={[local.cardUser, {color: hardText}]}>{`Estudante ${studentId}`}</Text>
+          <Text style={[local.cardDate, {color: hardText}]}>{date}</Text> 
         </View>
       </View>
-      <Text style={local.cardComment}>{comment}</Text>
+      <Text style={[local.cardComment, {color: hardText}]}>{comment}</Text>
       <RatingStars rating={rating} />
     </View>
   );
@@ -76,25 +84,27 @@ function FeedbackCard({ user, date, comment, rating }: Feedback) {
 export default function CourseOverviewScreen() {
   const route =
     useRoute<RouteProp<Record<string, CourseOverviewParams>, string>>();
-  const { courseId } = route.params ?? {};
+  var { courseId } = route.params ?? {};
   console.log("CourseOverviewScreen - route:", route);
   const navigate = useNavigation<any>();
-  const { theme } = useAppTheme() ?? {
-    theme: { name: "light", colors: { primary: "#51C391" } },
-  };
-  const hardText = theme.name === "dark" ? "#FFF" : "#000";
-
+  const { theme } = useAppTheme();
+  const isDark = theme.name === "dark";
+  const hardBg = isDark ? "#000000" : "#FFFFFF";
+  const hardText = isDark ? "#FFFFFF" : "#000000";
+  const hardBorder = isDark ? "#FFFFFF 0px 0px 1px" : "#000000 0px 0px 0px";
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [successModal, setSuccessModal] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  
 
   const handleMatricula = () => setSuccessModal(true);
 
   useEffect(() => {
     if (!courseId) {
       console.warn("CourseOverviewScreen: courseId não fornecido nos params");
+      courseId = 1;
     }
 
     const fetchData = async () => {
@@ -138,32 +148,32 @@ export default function CourseOverviewScreen() {
         ]}
       >
         <ActivityIndicator size="large" color="#50C2C9" />
-        <Text>Carregando informações...</Text>
+        <Text style={{color: hardText}}>Carregando informações...</Text>
       </View>
     );
   }
 
   return (
-    <View style={[s.container, { backgroundColor: "#E9F1F0", flex: 1 }]}>
+    <View style={[s.container, { backgroundColor: hardBg, flex: 1 }]}>
       <AppHeader userName="Lydia" onLogout={() => console.log("Sair")} />
 
       <ScrollView
         contentContainerStyle={[s.body, s.scrollContent]}
         showsVerticalScrollIndicator={false}
       >
-        <Text style={s.overviewTitle}>{course?.name ?? "Curso"}</Text>
-        <Text style={s.overviewSubtitle}>
+        <Text style={[s.overviewTitle, {color: hardText}]}>{course?.name ?? "Curso"}</Text>
+        <Text style={[s.overviewSubtitle, {color: hardText}]}>
           Instrutor(a): {course?.author ?? "Desconhecido"}
         </Text>
 
-        <Text style={s.overviewDescription}>
+        <Text style={[s.overviewDescription, {color: hardText}]}>
           {course?.description ?? "Descrição não disponível no momento."}
         </Text>
 
         <Text style={[s.sectionTitle, { marginTop: 8, color: hardText }]}>
           Período:
         </Text>
-        <Text style={{ color: "#555", fontSize: 13 }}>
+        <Text style={{ color: hardText, fontSize: 13 }}>
           {new Date(course?.startDate ?? "").toLocaleDateString("pt-BR")} até{" "}
           {new Date(course?.endDate ?? "").toLocaleDateString("pt-BR")}
         </Text>
@@ -179,7 +189,7 @@ export default function CourseOverviewScreen() {
         {feedbacks.length > 0 ? (
           feedbacks.map((fb) => <FeedbackCard key={fb.date} {...fb} />)
         ) : (
-          <Text style={{ color: "#555", marginTop: 8 }}>
+          <Text style={{ color: hardText, marginTop: 8 }}>
             Nenhum feedback disponível ainda.
           </Text>
         )}
@@ -236,6 +246,9 @@ const local = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 3,
+    borderStyle: "solid",
+    borderColor: "white",
+    borderWidth: 1
   },
   cardUser: { fontWeight: "bold", fontSize: 14 },
   cardDate: { fontSize: 12, color: "#777" },

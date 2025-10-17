@@ -45,7 +45,8 @@ export default function CourseCard({ item, showbutton, progress }: Props) {
   const progressTxt = formatCourseProgress(showbutton ? progress : null);
 
   function handlePress() {
-    navigation.navigate("Aprendizado", { screen:  "CourseOverview", params: { courseId: item.id } });
+    if (!showbutton)    navigation.navigate("Aprendizado", { screen:  "CourseOverview", params: { courseId: item.id } });
+    else navigation.navigate("CourseDetail", { course: item})
   }
 
   return (
