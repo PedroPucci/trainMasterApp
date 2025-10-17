@@ -51,7 +51,7 @@ export default function SearchScreen() {
       const items = query?.trim()
         ? await coursesService.getBySearch(query)
         : await coursesService.getAll();
-
+console.log("SearchScreen - load - items:", items);
       setData(items);
     } catch (e: any) {
       if (e?.name !== "CanceledError" && e?.message !== "canceled") {

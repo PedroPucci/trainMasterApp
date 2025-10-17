@@ -6,6 +6,7 @@
 // aparecer como item da Tab, mantendo a Tab visível.
 // -----------------------------------------------------------------------------
 
+
 import React, { useState } from "react";
 import { View, Text, Modal, Pressable, TouchableOpacity, StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -23,6 +24,9 @@ import type { DrawerParamList } from "./DrawerNavigator";
 import QuestionFlowScreen, { QuestionFlowParams } from "../../screens/QuestionFlowScreen";
 import ReviewAnswersScreen, { ReviewParams } from "../../screens/ReviewAnswersScreen";
 import { Course } from "../../services";
+import { CourseOverviewParams } from "../../screens/CourseOverviewScreen";
+import CourseOverviewScreen from "../../screens/CourseOverviewScreen";  // import para tela de visão do curso
+
 
 // 1) Tipos das rotas da Tab (nomes das abas)
 export type TabParamList = {
@@ -33,21 +37,26 @@ export type TabParamList = {
   Menu: undefined;
 };
 
+
 // 2) Tab Navigator tipado
 const Tab = createBottomTabNavigator<TabParamList>();
+
 
 // 3) Stacks internos por aba ---------------------------------------------------
 //    - Cada aba pode ter uma "home" + telas de detalhe.
 //    - Assim, a Tab continua visível mesmo ao navegar pro detalhe.
 
+
 // 3.1) Stack da aba "Aprendizado"
 export type AprendizadoStackParamList = {
   AprendizadoHome: undefined;          // lista de cursos matriculados
   CourseDetail: { course: Course};        // detalhe do curso (não aparece na Tab)
+  CourseOverview: CourseOverviewParams;
   QuestionFlow:QuestionFlowParams;
-  ReviewAnswers: ReviewParams; 
+  ReviewAnswers: ReviewParams;
 };
 const AprendizadoStackNav = createNativeStackNavigator<AprendizadoStackParamList>();
+
 
 function AprendizadoStack() {
   return (
@@ -59,6 +68,10 @@ function AprendizadoStack() {
       <AprendizadoStackNav.Screen
         name="CourseDetail"
         component={CourseDetailScreen}
+      />
+      <AprendizadoStackNav.Screen
+        name="CourseOverview"
+        component={CourseOverviewScreen}
       />
        <AprendizadoStackNav.Screen
         name="QuestionFlow"
@@ -72,6 +85,7 @@ function AprendizadoStack() {
   );
 }
 
+
 // 3.2) Stack da aba "Buscar"
 type BuscarStackParamList = {
   BuscarHome: undefined;
@@ -79,6 +93,7 @@ type BuscarStackParamList = {
   CourseDetail: { id: string };        // detalhe do curso (mesma tela)
 };
 const BuscarStackNav = createNativeStackNavigator<BuscarStackParamList>();
+
 
 function BuscarStack() {
   return (
@@ -89,6 +104,7 @@ function BuscarStack() {
   );
 }
 
+
 // 4) Telinha vazia para a aba "Menu" (a aba abre um modal com opções)
 function MenuScreen() {
   return (
@@ -98,20 +114,25 @@ function MenuScreen() {
   );
 }
 
+
 // 5) Tipo para ícones (auto-complete)
 type IconName = React.ComponentProps<typeof Ionicons>["name"];
+
 
 export default function RootTabs() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+
   // 6) Queremos acionar rotas do Drawer a partir do modal:
   const drawerNav = useNavigation<DrawerNavigationProp<DrawerParamList>>();
+
 
   // 7) Helper: navegar para uma aba específica
   const goTab = (tab: keyof TabParamList) => () => {
     setMenuOpen(false);
     drawerNav.navigate("HomeTabs", { screen: tab }); // HomeTabs = Tab dentro do Drawer
   };
+
 
   // 8) Itens do modal de menu (ações rápidas)
   const items: { key: string; label: string; icon: IconName; onPress: () => void }[] = [
@@ -137,13 +158,8 @@ export default function RootTabs() {
       icon: "business-outline",
       onPress: () => { setMenuOpen(false); drawerNav.navigate("Department"); },
     },
-    {
-      key: "overview",
-      label: "Matrícula",
-      icon: "list-outline",
-      onPress: () => { setMenuOpen(false); drawerNav.navigate("Overview"); },
-    },
   ];
+
 
   return (
     <>
@@ -157,6 +173,7 @@ export default function RootTabs() {
         <Tab.Screen name="Perfil" component={ProfileScreen} />
         {/* 👇 Usa o stack no lugar da tela direta */}
 
+
         {/* Aba Aprendizado usa o Stack local: AprendizadoHome + CourseDetail */}
         <Tab.Screen
           name="Aprendizado"
@@ -168,6 +185,7 @@ export default function RootTabs() {
           name="Buscar"
           component={BuscarStack}
         />
+
 
         {/* A aba Menu apenas abre o modal abaixo (não navega de verdade) */}
         <Tab.Screen
@@ -183,6 +201,7 @@ export default function RootTabs() {
         />
       </Tab.Navigator>
 
+
       {/* 10) Modal do "Menu" com ações rápidas (vai para abas ou rotas do Drawer) */}
       <Modal
         visible={menuOpen}
@@ -194,6 +213,7 @@ export default function RootTabs() {
         <View style={styles.sheet}>
           <View style={styles.handle} />
           <Text style={styles.sheetTitle}>Menu</Text>
+
 
           <View style={styles.list}>
             {items.map((item, idx) => (
@@ -211,6 +231,7 @@ export default function RootTabs() {
     </>
   );
 }
+
 
 const styles = StyleSheet.create({
   backdrop: { flex: 1, backgroundColor: "rgba(0,0,0,0.35)" },
@@ -239,3 +260,6 @@ const styles = StyleSheet.create({
   rowLabel: { color: "#fff", fontSize: 16, marginLeft: 6 },
   divider: { height: StyleSheet.hairlineWidth, backgroundColor: "rgba(255,255,255,0.15)" },
 });
+
+
+
